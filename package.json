@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/LWanjiru/le-documentaire/issues"
   },
-  "homepage": "https://github.com/LWanjiru/le-documentaire#readme"
+  "homepage": "https://github.com/LWanjiru/le-documentaire#readme",
+  "devDependencies": {
+    "eslint": "^4.1.1"
+  }
 }
