@@ -1,0 +1,19 @@
+{
+  "name": "le-documentaire",
+  "version": "1.0.0",
+  "description": "Manage all documents for the workspace in one place.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LWanjiru/le-documentaire.git"
+  },
+  "author": "LWanjiru",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LWanjiru/le-documentaire/issues"
+  },
+  "homepage": "https://github.com/LWanjiru/le-documentaire#readme"
+}
