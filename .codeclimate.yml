@@ -18,3 +18,4 @@ exclude_paths:
 - dist/
 - coverage/
 - favicon
+- package-lock.json
