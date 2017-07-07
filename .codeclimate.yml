@@ -1,0 +1,20 @@
+engines:
+  eslint: true
+  duplication:
+        enabled: true
+    config:
+        languages:
+        - javascript
+ratings:
+  paths:
+  - "**.js"
+  - "**.jsx"
+  - "**.css"
+  - "**.inc"
+  - "**.module"
+exclude_paths:
+- tests/**/*
+- node_modules/
+- dist/
+- coverage/
+- favicon
