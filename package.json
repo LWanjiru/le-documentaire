@@ -12,7 +12,9 @@
     "lint:watch": "watch 'npm run lint' ",
     "test:dev": "NODE_ENV=test istanbul cover _mocha -R server/test/server && open coverage/lcov-report/*.html",
     "test":"NODE_ENV=test mocha test/**",
-    "test:watch": "watch 'npm run test' "
+    "test:watch": "watch 'npm run test",
+    "start:dev": "nodemon ./bin/www.js"
+
   },
   "repository": {
     "type": "git",
