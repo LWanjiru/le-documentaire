@@ -6,7 +6,7 @@ script:
  - npm test
 
  before_install:
-  - npm install
+- npm install
 
   addons:
   code_climate:
