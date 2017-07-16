@@ -12,9 +12,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to the very beginning. Before there was anything at all.',
+// Require routes into the application
+require('./server/routes/route')(app);
+
+// A catch-all route for anything the webservice does not define.
+app.get('*', (req, res) => res.status(404).send({
+  message: 'Oops! Nothing to see here.',
 }));
 
 module.exports = app;

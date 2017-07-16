@@ -4,8 +4,9 @@
   "description": "Manage all documents for the workspace in one place.",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "nodemon ./bin/www.js",
+    "lint": "./node_modules/.bin/eslint .",
+    "test": "NODE_ENV=test mocha"
   },
   "repository": {
     "type": "git",
@@ -18,13 +19,19 @@
   },
   "homepage": "https://github.com/LWanjiru/le-documentaire#readme",
   "devDependencies": {
-    "eslint": "^4.1.1",
-    "nodemon": "^1.11.0"
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "morgan": "^1.8.2",
-    "sequelize-cli": "^2.7.0"
+    "pg": "^6.4.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.3.1"
   }
 }
