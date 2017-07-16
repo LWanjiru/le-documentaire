@@ -3,7 +3,8 @@
 Manage all your documents in one place, for the workspace.
 
 ### Pivotal Tracker Stories
-[Le Documentaire]https://www.pivotaltracker.com/n/projects/2072191
+---
+https://www.pivotaltracker.com/n/projects/2072191
 
 
 
