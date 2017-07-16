@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "nodemon ./bin/www.js",
     "lint": "./node_modules/.bin/eslint .",
-    "test": "NODE_ENV=test mocha"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
