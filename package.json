@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "nodemon ./bin/www.js",
     "lint": "./node_modules/.bin/eslint .",
-    "test": "NODE_ENV=test istanbul cover _mocha server/test/server && open coverage/lcov-report/*.html"
+    "test": "NODE_ENV=test mocha server/test/server && open coverage/lcov-report/*.html"
   },
   "repository": {
     "type": "git",
