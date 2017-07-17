@@ -9,5 +9,3 @@ const server = http.createServer(app);
 server.listen(port, () =>
   console.log(`The server is listening on port ${port}`));
 
-
-// parseInt(process.env.PORT, 10) 
