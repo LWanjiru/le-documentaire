@@ -8,7 +8,7 @@ module.exports = {
       lastName: req.body.lastName,
       email: req.body.email,
       password: req.body.password,
-      title: req.body.title || 'regular',
+      title: req.body.title,
     })
     .then(user => res.status(201).send(user))
     .catch(error => res.status(400).send(error));
@@ -17,5 +17,12 @@ module.exports = {
     User.findAll()
     .then(role => res.status(200).send(role))
     .catch(error => res.status(400).send(error));
+  },
+  deleteAll(req, res) {
+    if (process.env.NODE_ENV === 'test') {
+      User.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204).send({}));
+    } else {
+      res.status(403).send({ message: 'That action is not allowed!' });
+    }
   },
 };
