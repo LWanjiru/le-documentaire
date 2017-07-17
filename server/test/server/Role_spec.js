@@ -1,5 +1,5 @@
 /* global describe it beforeEach*/
-const app = require('./../../../app');
+const app = require('./../../../App');
 const request = require('supertest');
 
 describe('POST /api/roles ', () => {

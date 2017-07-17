@@ -2,7 +2,7 @@ const RoleController = require('../controllers/Roles');
 const UserController = require('../controllers/Users');
 
 
-require('./../../app');
+require('./../../App');
 
 module.exports = (app) => {
   app.post('/api/roles', RoleController.create);
