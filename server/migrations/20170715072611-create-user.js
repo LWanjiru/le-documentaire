@@ -23,16 +23,16 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
         allowNull: false,
-
       },
       email: {
         type: Sequelize.STRING,
         unique: true,
+        allowNull: false,
       },
       title: {
-        allowNull: false,
         type: Sequelize.STRING,
-        onDelete: 'CASCADE',
+        // onDelete: 'CASCADE',
+        defaultValue: 'regular',
         references: {
           model: 'Role',
           key: 'title',
