@@ -4,9 +4,6 @@ node_js:
 script:
  - npm test
 
-before_install:
-  - npm install
-
 addons:
   code_climate:
     repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
