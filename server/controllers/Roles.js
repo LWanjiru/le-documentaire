@@ -8,7 +8,7 @@ module.exports = {
   },
 
   list(req, res) {
-    Role.findAll()
+    Role.findAll({ attributes: ['title', 'description'], order: ['title'] })
     .then(role => res.status(200).send(role))
     .catch(error => res.status(400).send(error));
   },
