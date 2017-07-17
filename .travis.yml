@@ -1,12 +1,9 @@
 language: node_js
 node_js:
-  - "8"
-  - "7"
   - "6"
   
 script:
  - npm test
- - npm run coverage
 
 before_install:
   - npm install
