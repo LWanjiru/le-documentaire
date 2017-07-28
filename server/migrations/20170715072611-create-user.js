@@ -31,7 +31,7 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        // onDelete: 'CASCADE',
+        onDelete: 'CASCADE',
         defaultValue: 'regular',
         references: {
           model: 'Role',
