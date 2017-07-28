@@ -1,6 +1,6 @@
 // This script runs an HTTP server for the application.
 const http = require('http');
-const app = require('../app');
+const app = require('../App');
 
 const port = +process.env.PORT || 8000;
 app.set('port', port);
