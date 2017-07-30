@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon ./bin/www.js",
-    "start:prod": "NODE_ENV=production nodemon ./bin/www.js",
+    "start:prod": "",
     "lint": "./node_modules/.bin/eslint .",
     "test": "NODE_ENV=test istanbul cover _mocha -R server/test/server && open coverage/lcov-report/*.html"
   },
