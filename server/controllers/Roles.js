@@ -14,7 +14,7 @@ module.exports = {
           title: req.body.title.toLowerCase(),
           description: req.body.description,
         })
-        .then(newRole => res.status(201).send({ newRole, message: 'Role created successfully!' }));
+        .then(() => res.status(201).send({ message: 'Role created successfully!' }));
       }
     });
   },
