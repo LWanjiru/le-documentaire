@@ -1,50 +1,59 @@
-const { User } = require('../models');
+const { Role, User } = require('../models');
 const passwordHash = require('password-hash');
 
 module.exports = {
-
+  // Create a user
   create(req, res) {
-    // console.log(User);
-    User.findOne({
+    Role.findOne({
       where: {
-        username: req.body.username,
+        title: 'regular',
       },
     })
-    .then((user) => {
-      if (user) {
-        res.send({ message: 'This user already exists!' });
-      } else if (
-          !req.body.username || !req.body.firstName ||
-          !req.body.lastName || !req.body.password || !req.body.email) {
-        res.status(400).send({ message: 'All fields are required!' });
-      } else if (user === null) {
+    .then((role) => {
+      if (role) {
         User.findOne({
           where: {
-            email: req.body.email,
+            username: req.body.username,
           },
         })
-        .then((email) => {
-          const expression = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
-          if (email) {
-            res.send({ message: 'Email is registered to a different username.' });
-          } else if ((req.body.password).length < 6) {
-            res.send({ message: 'Password must be between 6 and 20 characters' });
-          } else if (expression.test(req.body.email)) {
-            User.create({
-              username: req.body.username,
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-              email: req.body.email,
-              password: passwordHash.generate(req.body.password),
+        .then((user) => {
+          if (user) {
+            res.send({ message: 'This user already exists!' });
+          } else if (
+              !req.body.username || !req.body.firstName ||
+              !req.body.lastName || !req.body.password || !req.body.email) {
+            res.status(400).send({ message: 'All fields are required!' });
+          } else if (user === null) {
+            User.findOne({
+              where: {
+                email: req.body.email,
+              },
             })
-        .then((newUser => res.status(201).send({ newUser, message: 'User created successfully!' })));
-          } else {
-            res.send({ message: 'Enter valid email format' });
+            .then((email) => {
+              const expression = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+              if (email) {
+                res.send({ message: 'Email is registered to a different username.' });
+              } else if ((req.body.password).length < 6) {
+                res.send({ message: 'Password must be between 6 and 20 characters' });
+              } else if (expression.test(req.body.email)) {
+                User.create({
+                  username: req.body.username,
+                  firstName: req.body.firstName,
+                  lastName: req.body.lastName,
+                  email: req.body.email,
+                  password: passwordHash.generate(req.body.password),
+                })
+            .then((newUser => res.status(201).send({ newUser, message: 'User created successfully!' })));
+              } else {
+                res.send({ message: 'Enter valid email format' });
+              }
+            });
           }
         });
+      } else {
+        res.send('Create regular role first');
       }
-      // }
     });
   },
 
