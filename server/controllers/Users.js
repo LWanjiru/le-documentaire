@@ -12,7 +12,7 @@ module.exports = {
   login(req, res) {
     User.findOne({
       where: {
-        username: req.body.username,
+        title: 'regular',
       },
     })
     .then((user) => {
