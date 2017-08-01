@@ -14,7 +14,7 @@ module.exports = {
           title: req.body.title.toLowerCase(),
           description: req.body.description,
         })
-        .then(() => res.status(201).send({ message: 'Role created successfully!' }));
+        .then((newRole => res.status(201).send({ newRole, message: 'Role created successfully!' })));
       }
     });
   },
@@ -24,7 +24,7 @@ module.exports = {
     Role.findAll()
     .then((role) => {
       if (role.length === 0) {
-        res.status(200).send({ message: 'Nothing to show.' });
+        res.status(204).send({ message: 'Nothing to show.' });
       } else {
         res.status(200).send(role);
       }
