@@ -4,13 +4,13 @@ const chai = require('chai');
 
 const expect = chai.expect;
 
-const db = require('./../../models');
+// const db = require('./../../models');
 
-const User = db.User;
-const Role = db.Role;
+// const User = db.User;
+// const Role = db.Role;
 
-describe('POST /users/', () => {
-  after((done) => {
+describe('/users/', () => {
+  beforeEach((done) => {
     request(app)
     .delete('/users')
     .end(done);
