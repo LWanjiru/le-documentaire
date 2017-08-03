@@ -146,7 +146,6 @@ module.exports = {
       }
     });
   },
-
   // Delete all users
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
