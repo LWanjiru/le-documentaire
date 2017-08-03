@@ -3,7 +3,6 @@ const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
-
 module.exports = {
   // Login a user
   login(req, res) {
@@ -13,20 +12,23 @@ module.exports = {
       },
     })
     .then((user) => {
-      const hashPassword = user.password;
       if (user) {
+        const hashPassword = user.password;
         const passwordValue = passwordHash.verify(req.body.password, hashPassword);
         if (passwordValue) {
           const token = jwt.sign({ username: user.username, email: user.email }, config.secret, { expiresIn: '1h' });
           res.send({
+            user,
             message: 'Log in successful!',
             token,
           });
         } else {
-          res.send('password does not match the username');
+          res.send({ message: 'password does not match the username' });
         }
+      } else if (!req.body.username || !req.body.password) {
+        res.send({ message: 'username/password fields cannot be empty' });
       } else {
-        res.send('user not found');
+        res.send({ message: 'This user account does not exist. Create one' });
       }
     });
   },
@@ -73,7 +75,7 @@ module.exports = {
                   email: req.body.email,
                   password: passwordHash.generate(req.body.password),
                 })
-            .then((newUser => res.status(201).send({ newUser, message: 'User created successfully!' })));
+                .then((newUser => res.status(201).send({ newUser, message: 'User created successfully!' })));
               } else {
                 res.send({ message: 'Enter valid email format' });
               }
@@ -81,11 +83,11 @@ module.exports = {
           }
         });
       } else {
-        res.send('Create regular role first');
+        res.send({ message: 'Default role does not exist. Contact Admin' });
       }
     });
   },
-
+  // List all users
   listAll(req, res) {
     User.findAll()
     .then((user) => {
@@ -96,6 +98,7 @@ module.exports = {
       }
     });
   },
+  // Get one user
   listOne(req, res) {
     User.findOne({ where: { id: req.params.id } })
     .then((user) => {
@@ -106,7 +109,7 @@ module.exports = {
       }
     });
   },
-
+  //  Update a user
   update(req, res) {
     User.findOne({ where: { id: req.params.id } })
     .then((user) => {
@@ -116,6 +119,7 @@ module.exports = {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
+          title: req.body.title,
           password: passwordHash.generate(req.body.password),
         }).then(() => {
           if (!req.body.username || !req.body.firstName ||
@@ -130,7 +134,7 @@ module.exports = {
       }
     });
   },
-
+  // Delete all users
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
       User.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204).send({}));
@@ -139,7 +143,7 @@ module.exports = {
     }
   },
 
-  // Delete one role
+  // Delete one user
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
       res.status(403).send({ message: 'That action is not allowed!' });
@@ -158,5 +162,41 @@ module.exports = {
           }
         });
     }
+  },
+
+  // Verify user login using jwt token
+  authenticate(req, res, next) {
+    // Get the token from either the body, query or token
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (token) {
+      jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+          res.send({ message: 'Failed to authenticate token' });
+        } else {
+          // Store token information in a request object for use in other requests
+          req.decoded = decoded;
+          next();
+        }
+      });
+    } else {
+      res.status(403).send({ message: 'Token absent. Please login to get a token' });
+    }
+  },
+
+  // Authorize admin
+  admin(req, res, next) {
+    const user = req.decoded;
+    User.find({
+      where: {
+        username: user.username,
+      },
+    })
+    .then((foundUser) => {
+      if (foundUser.title === 'admin') {
+        next();
+      } else {
+        res.send('only admin can see this route!');
+      }
+    });
   },
 };

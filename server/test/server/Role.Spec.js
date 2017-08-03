@@ -4,9 +4,9 @@ const request = require('supertest');
 
 const expect = chai.expect;
 
-it('GET /api/roles responds with a 200 on success', (done) => {
+it('GET /roles responds with a 200 on success', (done) => {
   request(app)
-  .get('/api/roles')
+  .get('/roles')
   .set('Accept', 'application/json')
   .end((err, res) => {
     expect(res.statusCode).to.equal(200);
@@ -16,7 +16,7 @@ it('GET /api/roles responds with a 200 on success', (done) => {
   });
 });
 
-describe('/api/roles ', () => {
+describe('/roles ', () => {
   beforeEach((done) => {
     request(app).delete('/api/roles').end(() => done());
   });
@@ -25,9 +25,9 @@ describe('/api/roles ', () => {
   //   request(app).delete('/api/roles').end(() => done());
   // });
 
-  it('GET /api/roles responds with a 200 when no roles exist on table', (done) => {
+  it('GET /roles responds with a 200 when no roles exist on table', (done) => {
     request(app)
-    .get('/api/roles')
+    .get('/roles')
     .set('Accept', 'application/json')
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
@@ -36,9 +36,9 @@ describe('/api/roles ', () => {
     });
   });
 
-  it('GET /api/roles/:title responds with a 404 if a role doesn\'t exist', (done) => {
+  it('GET /roles/:title responds with a 404 if a role doesn\'t exist', (done) => {
     request(app)
-    .get('/api/roles/regular')
+    .get('/roles/regular')
     .set('Accept', 'application/json')
     .end((err, res) => {
       expect(res.statusCode).to.equal(404);
@@ -47,9 +47,9 @@ describe('/api/roles ', () => {
     });
   });
 
-  it('POST /api/roles/add should respond with a 201 the created role on success', (done) => {
+  it('POST /roles/add should respond with a 201 the created role on success', (done) => {
     request(app)
-      .post('/api/roles/add')
+      .post('/roles/add')
       .set('Accept', 'application/x-www-form-urlencoded')
       .send({ title: 'regular', description: 'They write' })
       .end((err, res) => {
@@ -60,9 +60,9 @@ describe('/api/roles ', () => {
       });
   });
 
-  it('POST /api/roles responds with 400 if field is empty', (done) => {
+  it('POST /roles responds with 400 if field is empty', (done) => {
     request(app)
-    .post('/api/roles/add')
+    .post('/roles/add')
     .send({ title: '', description: 'they dance' })
     .send({ title: 'something', description: '' })
     .end((err, res) => {
@@ -72,9 +72,9 @@ describe('/api/roles ', () => {
     });
   });
 
-  it('PUT /api/roles responds with 404 if role not found', (done) => {
+  it('PUT /roles responds with 404 if role not found', (done) => {
     request(app)
-    .put('/api/roles/:title')
+    .put('/roles/:title')
     .send({ title: 'author', description: 'they dance' })
     .end((err, res) => {
       expect(res.statusCode).to.equal(404);
@@ -85,17 +85,17 @@ describe('/api/roles ', () => {
 });
 
 
-describe('/api/roles ', () => {
+describe('/roles ', () => {
   beforeEach((done) => {
     request(app)
-    .post('/api/roles/add')
+    .post('/roles/add')
     .send({ title: 'regular', description: 'They write' })
     .end(() => done());
   });
 
-  it('POST /api/roles/add responds with a 409 the role not created for duplicate', (done) => {
+  it('POST /roles/add responds with a 409 the role not created for duplicate', (done) => {
     request(app)
-    .post('/api/roles/add')
+    .post('/roles/add')
     .send({ title: 'regular', description: 'They write' })
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
@@ -106,9 +106,9 @@ describe('/api/roles ', () => {
     });
   });
 
-  it('GET /api/roles/:title responds with a 200 on success', (done) => {
+  it('GET /roles/:title responds with a 200 on success', (done) => {
     request(app)
-    .get('/api/roles/regular')
+    .get('/roles/regular')
     .set('Accept', 'application/json')
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
@@ -119,13 +119,13 @@ describe('/api/roles ', () => {
     });
   });
 
-  xit('PUT /api/roles responds with 400 if field is empty', (done) => {
+  it('PUT /roles responds with 400 if field is empty', (done) => {
     request(app)
-    .put('/api/roles/regular')
+    .put('/roles/regular')
     .send({ title: '', description: 'they dance' })
     .send({ title: 'something', description: '' })
     .end((err, res) => {
-      console.log(res.body);
+      console.log(err);
       expect(res.statusCode).to.equal(400);
       expect(res.body).to.include({ message: 'All fields are required!' });
       done();
@@ -133,9 +133,9 @@ describe('/api/roles ', () => {
   });
 });
 
-it('PUT /api/roles responds with 200 if update is successful', (done) => {
+it('PUT /roles responds with 200 if update is successful', (done) => {
   request(app)
-    .put('/api/roles/regular')
+    .put('/roles/regular')
     .send({ title: 'regular', description: 'they exist' })
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);

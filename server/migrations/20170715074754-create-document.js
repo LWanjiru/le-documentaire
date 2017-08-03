@@ -17,7 +17,8 @@ module.exports = {
       },
       access: {
         type: Sequelize.STRING,
-        allowNull: false,
+        default: 'public',
+        enum: ['private', 'public', 'role'],
       },
       userId: {
         allowNull: false,
