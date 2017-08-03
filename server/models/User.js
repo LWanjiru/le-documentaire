@@ -26,6 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       required: true,
     },
+    title: {
+      type: DataTypes.STRING,
+    },
   }, {
     freezeTableName: true,
     classMethods: {
