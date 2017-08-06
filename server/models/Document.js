@@ -9,10 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       required: true,
     },
     access: {
-      type: DataTypes.STRING,
-      required: true,
-      default: 'public',
-      enum: ['private', 'public', 'role'],
+      type: DataTypes.ENUM,
+      values: ['public', 'private', 'role'],
+    },
+    userId: {
+      type: DataTypes.INTEGER,
     },
   }, {
     freezeTableName: true,
