@@ -1,6 +1,7 @@
 const { Role, User } = require('../models');
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
+const jwtBlacklist = require('jwt-blacklist')(jwt);
 const config = require('../config/config');
 
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
         const hashPassword = user.password;
         const passwordValue = passwordHash.verify(req.body.password, hashPassword);
         if (passwordValue) {
-          const token = jwt.sign({ username: user.username, email: user.email }, config.secret, { expiresIn: '1h' });
+          const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email }, config.secret, { expiresIn: '1h' });
           res.send({
             user,
             message: 'Log in successful!',
@@ -77,16 +78,17 @@ module.exports = {
                 })
                 .then((newUser => res.status(201).send({ newUser, message: 'User created successfully!' })));
               } else {
-                res.send({ message: 'Enter valid email format' });
+                res.send({ message: 'Enter email using a valid format ie.[myemail@example.com]' });
               }
             });
           }
         });
       } else {
-        res.send({ message: 'Default role does not exist. Contact Admin' });
+        res.send({ message: 'Cannot create user. Please contact Admin' });
       }
     });
   },
+
   // List all users
   listAll(req, res) {
     User.findAll()
@@ -98,6 +100,7 @@ module.exports = {
       }
     });
   },
+
   // Get one user
   listOne(req, res) {
     User.findOne({ where: { id: req.params.id } })
@@ -109,31 +112,32 @@ module.exports = {
       }
     });
   },
-  //  Update a user
+
+  //  Update a user's password
   update(req, res) {
     User.findOne({ where: { id: req.params.id } })
     .then((user) => {
       if (user) {
         user.updateAttributes({
-          username: req.body.username,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          title: req.body.title,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          title: user.title,
           password: passwordHash.generate(req.body.password),
         }).then(() => {
-          if (!req.body.username || !req.body.firstName ||
-              !req.body.lastName || !req.body.password || !req.body.email) {
-            res.send({ message: 'All fields required!' });
+          if (!req.body.password) {
+            res.send({ message: 'Please enter your new password!' });
           } else {
-            res.status(200).send({ message: 'User updated!' });
+            res.status(200).send({ message: 'User password has been changed!' });
           }
         });
       } else {
-        res.send('User doesn\'t exist!');
+        res.status(404).send('User doesn\'t exist!');
       }
     });
   },
+
   // Delete all users
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
@@ -151,7 +155,7 @@ module.exports = {
       User.findById(req.params.id)
         .then((user) => {
           if (!user) {
-            res.send({ message: 'User doesn\'t exist' });
+            res.status(404).send({ message: 'User doesn\'t exist' });
           } else {
             User.destroy({
               where: { id: req.params.id },
@@ -171,7 +175,7 @@ module.exports = {
     if (token) {
       jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
-          res.send({ message: 'Failed to authenticate token' });
+          res.send({ message: 'Failed to authenticate token. Please login in to verify account' });
         } else {
           // Store token information in a request object for use in other requests
           req.decoded = decoded;
@@ -179,7 +183,7 @@ module.exports = {
         }
       });
     } else {
-      res.status(403).send({ message: 'Token absent. Please login to get a token' });
+      res.status(403).send({ message: 'You must be logged in to view the page you requested' });
     }
   },
 
@@ -195,8 +199,15 @@ module.exports = {
       if (foundUser.title === 'admin') {
         next();
       } else {
-        res.send('only admin can see this route!');
+        res.send({ Message: 'You must be signed in as an admin to access this page!' });
       }
     });
+  },
+
+  logout(req, res) {
+    // Get the token from either the body, query or token
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    jwtBlacklist.blacklist(token);
+    res.status(302).redirect('/');
   },
 };

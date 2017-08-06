@@ -3,20 +3,26 @@ const { Role } = require('../models');
 module.exports = {
   // Create a new role
   create(req, res) {
-    Role.findOne({ where: { title: req.body.title.toLowerCase() } })
-    .then((role) => {
-      if (role) {
-        res.status(409).send({ message: 'Role already exists!' });
-      } else if (!req.body.title || !req.body.description) {
-        res.status(400).send({ message: 'All fields are required!' });
-      } else {
-        Role.create({
+    if (!req.body.title || !req.body.description) {
+      res.status(400).send({ message: 'All fields are required!' });
+    } else if (req.body.title) {
+      Role.findOne({
+        where: {
           title: req.body.title.toLowerCase(),
-          description: req.body.description,
-        })
-        .then((newRole => res.status(201).send({ newRole, message: 'Role created successfully!' })));
-      }
-    });
+        },
+      })
+      .then((role) => {
+        if (role) {
+          res.status(409).send({ message: 'Role already exists!' });
+        } else {
+          Role.create({
+            title: req.body.title.toLowerCase(),
+            description: req.body.description,
+          })
+          .then((newRole => res.status(201).send({ newRole, message: 'Role created successfully!' })));
+        }
+      });
+    }
   },
 
   // List all roles
@@ -43,13 +49,13 @@ module.exports = {
     });
   },
 
-  // Update and make changes to an existing role
+  // Update the description an existing role
   update(req, res) {
     Role.findOne({ where: { title: req.params.title } })
     .then((role) => {
       if (role) {
         role.updateAttributes({
-          title: req.body.title.toLowerCase(),
+          title: req.params.title,
           description: req.body.description,
         }).then(() => {
           if (!req.body.title || !req.body.description) {
@@ -83,13 +89,15 @@ module.exports = {
         .then((role) => {
           if (!role) {
             res.send({ message: 'Role doesn\'t exist' });
+          } else if (req.params.title === 'admin' || req.params.title === 'regular') {
+            res.status(403).send({ message: 'That action is not allowed!' });
           } else {
             Role.destroy({
               where: { title: req.params.title },
               cascade: true,
               restartIdentity: true,
             });
-            res.send({ message: 'Role deleted!' });
+            res.send({ message: 'Role deleted successfully' });
           }
         });
     }
