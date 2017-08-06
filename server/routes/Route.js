@@ -3,7 +3,7 @@ const UserController = require('../controllers/Users');
 const DocumentController = require('../controllers/Documents');
 
 
-require('./../../App');
+require('../App');
 
 module.exports = (app) => {
   // Add roles
@@ -21,11 +21,12 @@ module.exports = (app) => {
   .delete(UserController.authenticate, UserController.admin, RoleController.deleteOne);
 
   // Login a user
-  app.post('/', UserController.login);
   app.post('/users/login', UserController.login);
 
   // Sign up a new user
   app.post('/users/', UserController.create);
+
+  app.post('/users/logout', UserController.authenticate, UserController.logout);
 
     // List, Delete ALL users
   app.route('/users')
@@ -38,5 +39,6 @@ module.exports = (app) => {
   .put(UserController.authenticate, UserController.update)
   .delete(UserController.authenticate, UserController.admin, UserController.deleteOne);
 
-  app.post('/documents', DocumentController.create);
+  app.post('/documents', UserController.authenticate, DocumentController.create);
+  app.get('/documents', DocumentController.listAll);
 };
