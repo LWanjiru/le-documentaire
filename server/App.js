@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Require routes into the application
-require('./server/routes/Route')(app);
+require('./routes/Route')(app);
 
 // A catch-all route for anything the webservice does not define.
 app.get('*', (req, res) => res.status(404).send({

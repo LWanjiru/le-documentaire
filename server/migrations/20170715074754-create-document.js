@@ -16,12 +16,11 @@ module.exports = {
         allowNull: false,
       },
       access: {
-        type: Sequelize.STRING,
-        default: 'public',
-        enum: ['private', 'public', 'role'],
+        type: Sequelize.ENUM,
+        defaultValue: 'private',
+        values: ['public', 'private', 'role'],
       },
       userId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
