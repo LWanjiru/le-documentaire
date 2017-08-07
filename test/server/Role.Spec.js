@@ -1,5 +1,5 @@
 const chai = require('chai');
-const app = require('./../../../App');
+const app = require('../../server/App');
 const request = require('supertest');
 
 const expect = chai.expect;
@@ -125,7 +125,7 @@ describe('/roles ', () => {
     .send({ title: '', description: 'they dance' })
     .send({ title: 'something', description: '' })
     .end((err, res) => {
-      console.log(err);
+      // console.log(err);
       expect(res.statusCode).to.equal(400);
       expect(res.body).to.include({ message: 'All fields are required!' });
       done();

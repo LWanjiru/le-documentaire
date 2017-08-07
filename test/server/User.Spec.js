@@ -1,4 +1,4 @@
-const app = require('./../../../App');
+const app = require('../../server/App');
 const request = require('supertest');
 const chai = require('chai');
 
@@ -10,11 +10,11 @@ const expect = chai.expect;
 // const Role = db.Role;
 
 describe('/users/', () => {
-  beforeEach((done) => {
-    request(app)
-    .delete('/users')
-    .end(done);
-  });
+  // beforeEach((done) => {
+  //   request(app)
+  //   .delete('/users')
+  //   .end(done);
+  // });
 
   it('POST /users/ responds with 201 on user create success', (done) => {
     request(app)

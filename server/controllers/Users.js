@@ -154,7 +154,7 @@ module.exports = {
     } else {
       User.findById(req.params.id)
         .then((user) => {
-          if (!user) {
+          if (!user || user.length < 1) {
             res.status(404).send({ message: 'User doesn\'t exist' });
           } else {
             User.destroy({
