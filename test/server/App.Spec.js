@@ -1,5 +1,5 @@
 /* global describe it */
-const app = require('./../../../App');
+const app = require('../../server/App');
 const request = require('supertest');
 
 describe('GET /', () => {
