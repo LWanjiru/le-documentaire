@@ -6,6 +6,13 @@ const DocumentController = require('../controllers/Documents');
 require('../App');
 
 module.exports = (app) => {
+  // Enable Cross-Origin Resource Sharing (CORS)
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
+
   /**
    * ROLE routes
    * All require ADMIN credentials to access
@@ -68,7 +75,7 @@ module.exports = (app) => {
   app.get('/documents/all', UserController.authenticate, UserController.admin, DocumentController.listAll);
 
   // View All Public documents
-  app.get('/', DocumentController.listPublic);
+  app.get('/documents/public', DocumentController.listPublic);
 
   // View all of a user's documents
   app.get('/users/:id/documents', UserController.authenticate, DocumentController.listUserDocs);
