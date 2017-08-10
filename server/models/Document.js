@@ -12,8 +12,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['public', 'private', 'role'],
     },
+    owner: {
+      type: DataTypes.STRING,
+    },
     userId: {
       type: DataTypes.INTEGER,
+    },
+    userRole: {
+      type: DataTypes.STRING,
     },
   }, {
     freezeTableName: true,
