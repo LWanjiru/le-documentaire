@@ -1,7 +1,9 @@
 const { Role } = require('../models');
 
 module.exports = {
-  // Create a new role
+  // Check whether a role already exists and return message if it does
+  // else create a new role with 'title' and 'description' attributes
+  // Return created role and message on success.
   create(req, res) {
     if (!req.body.title || !req.body.description) {
       res.status(400).send({ message: 'All fields are required!' });
@@ -26,6 +28,7 @@ module.exports = {
   },
 
   // List all roles
+  // Return message if empty or a list of existing roles
   listAll(req, res) {
     Role.findAll()
     .then((role) => {
@@ -37,7 +40,8 @@ module.exports = {
     });
   },
 
-  // Find a specified role
+  // Find a specified role by TITLE
+  // Return message if not found or the 'role' if it exists
   listOne(req, res) {
     Role.findOne({ where: { title: req.params.title } })
     .then((role) => {
@@ -49,16 +53,16 @@ module.exports = {
     });
   },
 
-  // Update the description an existing role
+  // Find a role by TITLE and Update the description
+  // Return success message if updated
   update(req, res) {
     Role.findOne({ where: { title: req.params.title } })
     .then((role) => {
       if (role) {
         role.updateAttributes({
-          title: req.params.title,
           description: req.body.description,
         }).then(() => {
-          if (!req.body.title || !req.body.description) {
+          if (!req.body.description) {
             res.send({ message: 'All fields required!' });
           } else {
             res.status(200).send({ message: 'Role updated!' });
@@ -80,7 +84,8 @@ module.exports = {
     }
   },
 
-  // Delete one role
+  // Fetch role by TITLE and delete
+  // Return success message on delete
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
       res.status(403).send({ message: 'That action is not allowed!' });

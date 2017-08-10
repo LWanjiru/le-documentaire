@@ -5,7 +5,10 @@ const jwtBlacklist = require('jwt-blacklist')(jwt);
 const config = require('../config/config');
 
 module.exports = {
-  // Login a user
+  // Login a user with 'username' and 'password'
+  // Verify password matches stored hashPassword registered to that username
+  // Sign token to user information
+  // return user details, success message and token
   login(req, res) {
     User.findOne({
       where: {
@@ -17,7 +20,7 @@ module.exports = {
         const hashPassword = user.password;
         const passwordValue = passwordHash.verify(req.body.password, hashPassword);
         if (passwordValue) {
-          const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email }, config.secret, { expiresIn: '1h' });
+          const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
           res.send({
             user,
             message: 'Log in successful!',
@@ -34,7 +37,10 @@ module.exports = {
     });
   },
 
-  // Create a user
+  // Check whether the default role exists, if not, send message to alert admin
+  // else create a user with a username,first name, last name, email and password
+  // Validate email and generate password hash
+  // Return created user and message on success
   create(req, res) {
     Role.findOne({
       where: {
@@ -90,6 +96,7 @@ module.exports = {
   },
 
   // List all users
+  // Return message if empty or list of users details if available
   listAll(req, res) {
     User.findAll()
     .then((user) => {
@@ -101,7 +108,9 @@ module.exports = {
     });
   },
 
-  // Get one user
+  // Get one user by ID
+  // Return message if not found or user details
+  // if a user with the specified ID is found
   listOne(req, res) {
     User.findOne({ where: { id: req.params.id } })
     .then((user) => {
@@ -113,27 +122,27 @@ module.exports = {
     });
   },
 
-  //  Update a user's password
+  //  Fetch a user by ID and update username, email, or password field
+  // Return message on successful update
   update(req, res) {
     User.findOne({ where: { id: req.params.id } })
     .then((user) => {
       if (user) {
-        user.updateAttributes({
-          username: user.username,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          title: user.title,
-          password: passwordHash.generate(req.body.password),
-        }).then(() => {
-          if (!req.body.password) {
-            res.send({ message: 'Please enter your new password!' });
-          } else {
-            res.status(200).send({ message: 'User password has been changed!' });
-          }
-        });
+        if (req.params.id !== req.decoded.id.toString()) {
+          res.status(403).send({ message: 'That action is not allowed. You can only edit your own password.' });
+        } else if (!req.body.password || req.body.password === '') {
+          res.send({ message: 'Please enter your new password!' });
+        } else {
+          user.updateAttributes({
+            username: req.body.username || user.username,
+            email: req.user.email || user.email,
+            password: passwordHash.generate(req.body.password),
+          }).then(() => {
+            res.status(200).send({ message: 'Your profile has been updated!' });
+          });
+        }
       } else {
-        res.status(404).send('User doesn\'t exist!');
+        res.status(404).send({ message: 'User doesn\'t exist!' });
       }
     });
   },
@@ -147,15 +156,19 @@ module.exports = {
     }
   },
 
-  // Delete one user
+  // Delete one user using ID
+  // Admin cannot be deleted
+  // return message on success
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
-      res.status(403).send({ message: 'That action is not allowed!' });
+      res.status(403).send({ message: 'That action is not allowed! 1' });
     } else {
       User.findById(req.params.id)
         .then((user) => {
           if (!user || user.length < 1) {
             res.status(404).send({ message: 'User doesn\'t exist' });
+          } else if (user.title === 'admin') {
+            res.send({ message: 'This action is unauthorized!' });
           } else {
             User.destroy({
               where: { id: req.params.id },
@@ -187,27 +200,76 @@ module.exports = {
     }
   },
 
-  // Authorize admin
+  // Authorize admin privileges by ID
   admin(req, res, next) {
     const user = req.decoded;
     User.find({
       where: {
-        username: user.username,
+        id: user.id,
       },
     })
     .then((foundUser) => {
-      if (foundUser.title === 'admin') {
-        next();
+      if (foundUser) {
+        if (foundUser.title === 'admin') {
+          next();
+        } else {
+          res.status(403).send({ message: 'Access denied! You do not have the required permissions.' });
+        }
       } else {
-        res.send({ Message: 'You must be signed in as an admin to access this page!' });
+        res.send({ message: 'User not found!' });
       }
     });
   },
 
+  // Logout the user by blacklisting the current token
+  // user has to login again to access protected parts of the application
   logout(req, res) {
     // Get the token from either the body, query or token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     jwtBlacklist.blacklist(token);
-    res.status(302).redirect('/');
+    res.send({ message: 'Logged out successfully!' });
+  },
+
+  paginateUsers(req, res) {
+    if (req.query.limit || req.query.offset) {
+      User.findAndCountAll({
+        limit: req.query.limit,
+        offset: req.query.offset,
+        attributes: ['id', 'username', 'title', 'createdAt'],
+        order: [['id', 'ASC']],
+      })
+      .then((users) => {
+        res.send(users);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+    }
+  },
+
+  // Search for a with their username or email
+  // return user
+  userSearch(req, res) {
+    if (req.query.q) {
+      User.findAndCountAll({
+        where: {
+          $or: [
+            { username: { $like: `%${req.query.q}%` } },
+            { email: { $like: `%${req.query.q}%` } },
+          ],
+        },
+        limit: req.query.limit,
+        offset: req.query.offset,
+        attributes: ['username', 'email'],
+        order: [['username', 'ASC']],
+      })
+      .then((user) => {
+        if (!user || user.rows.length === 0) {
+          res.send({ message: 'User not found!' });
+        } else {
+          res.status(200).send(user);
+        }
+      });
+    }
   },
 };
