@@ -37,6 +37,11 @@ https://www.pivotaltracker.com/n/projects/2072191
 ```
 - You are now connected to the server. Checkout the `server/routes/Routes.js` file for the currently available routes and the required permissions. 
 
+```
+NB: To use the login `token` provided. Add it as an `x-access-token` attributes in your header after each login as a different user. 
+
+```
+
 
 [![Build Status](https://travis-ci.org/LWanjiru/le-documentaire.svg?branch=master)](https://travis-ci.org/LWanjiru/le-documentaire)
 [![Code Climate](https://codeclimate.com/github/LWanjiru/le-documentaire/badges/gpa.svg)](https://codeclimate.com/github/LWanjiru/le-documentaire)
