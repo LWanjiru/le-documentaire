@@ -4,10 +4,10 @@
   "description": "Manage all documents for the workspace in one place.",
   "main": "./bin/www",
   "scripts": {
-    "start": "npm-run-all -l -p lint:watch start-server start-client",
+    "start": "npm-run-all -l -p lint:watch start-server start-client build",
     "start-server": "nodemon",
     "start-client": "webpack-dev-server --color",
-    "build": "webpack",
+    "build": "webpack -p",
     "lint": "./node_modules/.bin/eslint client/  server/",
     "lint:watch": "watch 'npm run lint' ",
     "test:dev": "NODE_ENV=test istanbul cover _mocha -R server/test/server && open coverage/lcov-report/*.html",

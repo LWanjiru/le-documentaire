@@ -20,6 +20,9 @@ module.exports = {
         defaultValue: 'private',
         values: ['public', 'private', 'role'],
       },
+      owner: {
+        type: Sequelize.STRING,
+      },
       userId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
@@ -28,6 +31,9 @@ module.exports = {
           key: 'id',
           as: 'userId',
         },
+      },
+      userRole: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
