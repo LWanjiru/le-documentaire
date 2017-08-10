@@ -1,19 +1,27 @@
+---
 engines:
-  eslint: true
+  csslint:
+    enabled: true
   duplication:
     enabled: true
     config:
       languages:
-       - javascript
+      - javascript
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
 ratings:
   paths:
-  - "**.js"
-  - "**.jsx"
   - "**.css"
   - "**.inc"
+  - "**.js"
+  - "**.jsx"
   - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
 exclude_paths:
-- tests/**/*
 - node_modules/
 - dist/
 - coverage/
