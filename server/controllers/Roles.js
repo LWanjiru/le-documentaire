@@ -12,5 +12,4 @@ module.exports = {
     .then(role => res.status(200).send(role))
     .catch(error => res.status(400).send(error));
   },
-  
 };
