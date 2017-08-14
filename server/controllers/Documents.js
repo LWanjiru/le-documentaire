@@ -52,10 +52,13 @@ module.exports = {
   // Fetch by access, and only return documents whose access is set to PUBLIC
   // If list is empty return message
   listPublic(req, res) {
-    Document.findAll({
+    Document.findAndCountAll({
       where: {
         access: 'public',
       },
+      limit: req.query.limit,
+      offset: req.query.offset,
+      order: [['id', 'ASC']],
     })
     .then((document) => {
       if (document.length === 0) {

@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - "6"
+  - '6'
 script:
- - npm test
-
-before_install:
-  npm install
-
+  - npm test
 addons:
   code_climate:
     repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
+before_install:
+  - npm install -g dredd@4.1.3
+before_script:
+  - dredd
