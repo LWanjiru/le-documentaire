@@ -1,3 +1,6 @@
 node_modules/
-.vscode/
 coverage/
+.vscode
+jwt-data
+config.js
+npm-debug.log.**
