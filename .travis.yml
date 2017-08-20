@@ -4,7 +4,7 @@ node_js:
   - "8"
   - "7"
 script:
-  - npm test
+  - npm run server-test-path
 code_climate:
   repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
 before_script:
@@ -14,7 +14,6 @@ before_script:
 services:
   - postgresql
 env:
-  - DB=postgres
-  - SEQUELIZE=4.3.1
+  - DB=postgres SEQUELIZE=4.3.1
 addons:
   postgresql: "9.6"
