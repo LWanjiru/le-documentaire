@@ -10,6 +10,9 @@ addons:
   code_climate:
     repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS test;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE test;' -U postgres; fi"
 services:
   - postgresql
+env:
+  - DB=postgres
