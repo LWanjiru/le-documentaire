@@ -245,8 +245,10 @@ module.exports = {
   logout(req, res) {
     // Get the token from either the body, query or token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    jwtBlacklist.blacklist(token);
-    res.status(205);
+    if (token) {
+      jwtBlacklist.blacklist(token);
+      res.status(205);
+    }
   },
 
   paginateUsers(req, res) {
