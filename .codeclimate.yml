@@ -1,3 +1,4 @@
+---
 engines:
   csslint:
     enabled: true
@@ -21,8 +22,7 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-- node_modules/
+- test/**/*
 - dist/
 - coverage/
 - favicon
-- package-lock.json
