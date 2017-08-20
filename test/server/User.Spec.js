@@ -4,7 +4,7 @@ const chai = require('chai');
 
 const expect = chai.expect;
 
-describe('User', () => {
+describe('User (regular)', () => {
   let token;
 
   before((done) => {
@@ -17,7 +17,6 @@ describe('User', () => {
     })
     .end((err, res) => {
       token = res.body.token;
-      // console.log(token);
       done();
     });
   });
@@ -217,6 +216,217 @@ describe('User', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(404);
         expect(res.body.message).to.equal('User not found!');
+        done();
+      });
+  });
+
+  it('GET /search/users responds with 200 if user found', (done) => {
+    Request(app)
+      .get('/search/users/?q=musketeer')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        done();
+      });
+  });
+
+  it('GET /search/users responds with 404 if user NOT found', (done) => {
+    Request(app)
+      .get('/search/users/?q=buttercup3')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(404);
+        expect(res.body.message).to.equal('User not found!');
+        done();
+      });
+  });
+
+  it('PUT /users/:id responds with 403 if user DOES NOT exist', (done) => {
+    Request(app)
+      .put('/users/1')
+      .set('x-access-token', token)
+      .send({
+        username: 'mercy',
+      })
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(403);
+        expect(res.body.message).to.equal('That action is not allowed. You can only edit your own password.');
+        done();
+      });
+  });
+
+  it('PUT /users/:id responds with message if password field is empty', (done) => {
+    Request(app)
+      .put('/users/2')
+      .set('x-access-token', token)
+      .send({
+        password: '',
+      })
+      .end((err, res) => {
+        // expect(res.statusCode).to.equal(403);
+        expect(res.body.message).to.equal('Please enter your new password!');
+        done();
+      });
+  });
+  it('PUT /users/:id responds with 200 and message on field update success', (done) => {
+    Request(app)
+      .put('/users/2')
+      .set('x-access-token', token)
+      .send({
+        password: 'soledad123',
+      })
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.message).to.equal('Your profile has been updated!');
+        done();
+      });
+  });
+
+  it('PUT /users/:id responds with 404 on user id not found', (done) => {
+    Request(app)
+      .put('/users/39')
+      .set('x-access-token', token)
+      .send({
+        password: 'soledad123',
+      })
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(404);
+        expect(res.body.message).to.equal('User doesn\'t exist!');
+        done();
+      });
+  });
+  it('DELETE /users responds with 401 if user not admin and ENV NOT test', (done) => {
+    process.env.NODE_ENV = 'development';
+    Request(app)
+      .delete('/users')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(401);
+        expect(res.body.message).to.equal('You do not have the required permissions.');
+        done();
+      });
+  });
+
+  it('POST /users/logout responds with 205 on success', () => {
+    Request(app)
+    .post('/users/logout')
+    .set('x-access-token', token)
+    .end((err, res) => {
+      expect(res.statusCode).to.equal(205);
+    });
+  });
+
+  it('PUT /users/:id responds with 403 on user TOKEN NOT present', (done) => {
+    Request(app)
+      .get('/users/1')
+      // Disabled token
+      // .set('x-access-token', token)
+      .send({
+        password: 'soledad123',
+      })
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(403);
+        expect(res.body.message).to.equal('You must be logged in to view the page you requested');
+        done();
+      });
+  });
+
+  it('PUT /users/:id responds with 401 on user TOKEN FAILED to authenticate', (done) => {
+    Request(app)
+      .get('/users/1')
+      .set('x-access-token', token)
+      .send({
+        password: 'soledad123',
+      })
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(401);
+        expect(res.body.message).to.equal('Failed to authenticate token. Please login in to verify account');
+        done();
+      });
+  });
+});
+
+describe('User (admin)', () => {
+  let token;
+
+  beforeEach((done) => {
+    Request(app)
+    .post('/users/login')
+    .set('Accept', 'application/x-www-form-urlencoded')
+    .send({
+      username: 'admin',
+      password: 'administrator',
+    })
+    .end((err, res) => {
+      token = res.body.token;
+      done();
+    });
+  });
+
+  it('DELETE /users responds with 401 if user admin and ENV NOT test', (done) => {
+    Request(app)
+      .delete('/users')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(401);
+        expect(res.body.message).to.equal('You do not have the required permissions.');
+        done();
+      });
+  });
+
+  xit('DELETE /users responds with 204 if user admin and ENV test', (done) => {
+    process.env.NODE_ENV = 'test';
+    Request(app)
+      .delete('/users')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(204);
+        done();
+      });
+  });
+
+  it('DELETE /users/:id responds with 404 if user DOES NOT exist', (done) => {
+    process.env.NODE_ENV = 'test';
+    Request(app)
+      .delete('/users/78')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(404);
+        expect(res.body.message).to.equal('User doesn\'t exist');
+        done();
+      });
+  });
+  it('DELETE /users/:id responds with 403 if user is admin', (done) => {
+    process.env.NODE_ENV = 'test';
+    Request(app)
+      .delete('/users/1')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(403);
+        expect(res.body.message).to.equal('Permission denied!');
+        done();
+      });
+  });
+  it('DELETE /users/:id responds with 403 if ENV production', (done) => {
+    process.env.NODE_ENV = 'production';
+    Request(app)
+      .delete('/users/3')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(403);
+        expect(res.body.message).to.equal('That action is not allowed!');
+        done();
+      });
+  });
+
+  it('DELETE /users/:id responds with message if deleted successfully', (done) => {
+    process.env.NODE_ENV = 'test';
+    Request(app)
+      .delete('/users/3')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        // expect(res.statusCode).to.equal();
+        expect(res.body.message).to.equal('User deleted!');
         done();
       });
   });
