@@ -88,7 +88,7 @@ module.exports = (app) => {
 
   // View all documents whose access is allowed to only users
   //  with the logged in user's role
-  app.get('/documents/users/role', UserController.authenticate, DocumentController.listDocsByRole);
+  app.get('/documents/users/:role', UserController.authenticate, DocumentController.listDocsByRole);
 
   //  Delete a document by ID
   app.delete('/documents/:id', UserController.authenticate, DocumentController.deleteOne);

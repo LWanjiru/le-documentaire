@@ -14,9 +14,9 @@ module.exports = {
     })
     .then((user) => {
       if (!req.body.title) {
-        res.send({ message: 'Please enter a title for your document.' });
+        res.status(400).send({ message: 'Please enter a title for your document.' });
       } else if (!req.body.content || req.body.content === '') {
-        res.send({ message: 'Document body cannot be empty.' });
+        res.status(400).send({ message: 'Document body cannot be empty.' });
       } else {
         const userRole = decoded.title;
         const userId = user.id;
@@ -31,7 +31,7 @@ module.exports = {
           userRole,
         })
         .then((document) => {
-          res.send(document);
+          res.status(201).send(document);
         });
       }
     });
@@ -153,7 +153,7 @@ module.exports = {
       Document.findOne({ where: { id: req.params.id } })
       .then((document) => {
         if (!document) {
-          res.send({ messsage: 'Document could not be found!' });
+          res.status(404).send({ message: 'Document could not be found!' });
         } else if (document.userId !== req.decoded.id) {
           res.status(401).send({ message: 'You can only update documents you own!' });
         } else {
@@ -161,7 +161,7 @@ module.exports = {
             title: req.body.title || document.title,
             content: req.body.content || document.content,
           }).then(() => {
-            res.status(200).send({ message: 'Your document was succefully updated!' });
+            res.status(200).send({ message: 'Your document was successfully updated!' });
           });
         }
       });
@@ -229,7 +229,7 @@ module.exports = {
       })
       .then((document) => {
         if (!document || document.rows.length === 0) {
-          res.send({ message: 'Document not found!' });
+          res.status(404).send({ message: 'Document not found!' });
         } else {
           res.status(200).send(document);
         }
