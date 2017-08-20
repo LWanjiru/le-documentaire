@@ -36,7 +36,7 @@ https://www.pivotaltracker.com/n/projects/2072191
 }
 ```
 - You are now connected to the server. Checkout the `server/routes/Routes.js` file for the currently available routes and the required permissions. 
--  You can also check out the [Le-Documentaire online documentation Here!](docs.ledocumentaire.apiary.io)
+-  You can also check out the [Le-Documentaire online documentation Here!](app.apiary.io/ledocumentaire)
 
 ```
 NB: To use the login `token` provided. Add it as an `x-access-token` attributes in your header after each login as a different user. 
