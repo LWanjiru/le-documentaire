@@ -4,3 +4,5 @@ coverage/
 jwt-data
 config.js
 npm-debug.log.**
+npm-debug.log
+.csslintrc

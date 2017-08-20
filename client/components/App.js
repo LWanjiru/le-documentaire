@@ -1,11 +1,9 @@
 import React from 'react';
-import DocumentList from './DocumentList';
+import SignUpContainer from './SignUpPage/SignUpContainer';
 
 const App = () => (
   <div>
-    <div className="container">
-      <DocumentList />
-    </div>
+    <SignUpContainer />
   </div>
 );
 
