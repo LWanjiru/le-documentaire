@@ -2,7 +2,8 @@
     "root": true,
     "extends": "airbnb",
     "ecmaFeatures": {
-          "jsx": true
+          "jsx": true,
+          "modules": true
     },
     "env": {
         "node": true,
@@ -10,9 +11,11 @@
         "mocha": true,
         "browser": true
     },
+    "parser": "babel-eslint",
     "rules": {
   "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-  "import/no-dynamic-require": 0
+  "import/no-dynamic-require": 0,
+  "no-underscore-dangle": 0
 },
     "plugins": [
         "import",

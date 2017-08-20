@@ -9,8 +9,7 @@ const config = {
   // devtool: 'cheap-module-eval-source-map',
 
   entry: [
-    'webpack-hot-middleware/client',
-    './client/index',
+    './client/Index',
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -29,7 +28,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './client/index.html',
+      template: './client/Index.html',
       inject: true,
     }),
     new ExtractTextPlugin({
