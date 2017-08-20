@@ -22,7 +22,7 @@ module.exports = (app) => {
 
   // List, Delete ALL roles
   app.route('/roles')
-  .get(UserController.authenticate, UserController.admin, RoleController.listAll)
+  .get(RoleController.listAll)
   .delete(UserController.authenticate, UserController.admin, RoleController.deleteAll);
 
   // View, Update, Delete ONE role by title
@@ -63,7 +63,7 @@ module.exports = (app) => {
 
 
   // Search for a user
-  app.get('/search/users/', UserController.userSearch);
+  app.get('/search/users/', UserController.authenticate, UserController.userSearch);
 
  /**
   * DOCUMENT routes

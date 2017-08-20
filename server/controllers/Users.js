@@ -21,15 +21,24 @@ module.exports = {
         const passwordValue = passwordHash.verify(req.body.password, hashPassword);
         if (passwordValue) {
           const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
+          const loginDetails = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            title: user.title,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          };
+
           res.send({
-            user,
+            loginDetails,
             message: 'Log in successful!',
             token,
           });
         } else {
           res.send({ message: 'password does not match the username' });
         }
-      } else if (!req.body.username || !req.body.password) {
+      } else if (!req.body.username || !req.body.password || req.body.username === '' || req.body.password === '') {
         res.send({ message: 'username/password fields cannot be empty' });
       } else {
         res.send({ message: 'This user account does not exist. Create one' });
@@ -56,7 +65,7 @@ module.exports = {
         })
         .then((user) => {
           if (user) {
-            res.status(409).send({ message: 'This user already exists!' });
+            res.status(409).send({ message: 'This username is already in use! Please create a unique one.' });
           } else if (
               !req.body.username || !req.body.firstName ||
               !req.body.lastName || !req.body.password || !req.body.email) {
@@ -71,9 +80,9 @@ module.exports = {
               const expression = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
               if (email) {
-                res.send({ message: 'Email is registered to a different username.' });
+                res.status(409).send({ message: 'Email is registered to a different username.' });
               } else if ((req.body.password).length < 6) {
-                res.send({ message: 'Password must be between 6 and 20 characters' });
+                res.status(422).send({ message: 'Password must be between 6 and 20 characters' });
               } else if (expression.test(req.body.email)) {
                 User.create({
                   username: req.body.username,
@@ -82,15 +91,15 @@ module.exports = {
                   email: req.body.email,
                   password: passwordHash.generate(req.body.password),
                 })
-                .then((newUser => res.status(201).send({ newUser, message: 'User created successfully!' })));
+                .then(res.status(201).send({ message: 'User created successfully!' }));
               } else {
-                res.send({ message: 'Enter email using a valid format ie.[myemail@example.com]' });
+                res.status(422).send({ message: 'Enter email using a valid format ie.[myemail@example.com]' });
               }
             });
           }
         });
       } else {
-        res.send({ message: 'Cannot create user. Please contact Admin' });
+        res.status(500).send({ message: 'Cannot create user. Please contact Admin' });
       }
     });
   },
@@ -98,7 +107,9 @@ module.exports = {
   // List all users
   // Return message if empty or list of users details if available
   listAll(req, res) {
-    User.findAll()
+    User.findAll({
+      attributes: ['username', 'email', 'title', 'createdAt', 'updatedAt'],
+    })
     .then((user) => {
       if (user.length === 0) {
         res.status(200).send({ message: 'Nothing to show.' });
@@ -117,7 +128,15 @@ module.exports = {
       if (!user) {
         res.status(404).send({ message: 'User not found!' });
       } else {
-        res.status(200).send(user);
+        const viewUser = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          title: user.title,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        };
+        res.status(200).send(viewUser);
       }
     });
   },
@@ -135,8 +154,8 @@ module.exports = {
         } else {
           user.updateAttributes({
             username: req.body.username || user.username,
-            email: req.user.email || user.email,
-            password: passwordHash.generate(req.body.password),
+            email: req.body.email || user.email,
+            password: passwordHash.generate(req.body.password) || user.passsword,
           }).then(() => {
             res.status(200).send({ message: 'Your profile has been updated!' });
           });
@@ -168,7 +187,7 @@ module.exports = {
           if (!user || user.length < 1) {
             res.status(404).send({ message: 'User doesn\'t exist' });
           } else if (user.title === 'admin') {
-            res.send({ message: 'This action is unauthorized!' });
+            res.status(403).send({ message: 'This action is unauthorized!' });
           } else {
             User.destroy({
               where: { id: req.params.id },
@@ -188,7 +207,7 @@ module.exports = {
     if (token) {
       jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
-          res.send({ message: 'Failed to authenticate token. Please login in to verify account' });
+          res.status(401).send({ message: 'Failed to authenticate token. Please login in to verify account' });
         } else {
           // Store token information in a request object for use in other requests
           req.decoded = decoded;
@@ -213,10 +232,10 @@ module.exports = {
         if (foundUser.title === 'admin') {
           next();
         } else {
-          res.status(403).send({ message: 'Access denied! You do not have the required permissions.' });
+          res.status(401).send({ message: 'You do not have the required permissions.' });
         }
       } else {
-        res.send({ message: 'User not found!' });
+        res.status(404).send({ message: 'User not found!' });
       }
     });
   },
@@ -227,7 +246,7 @@ module.exports = {
     // Get the token from either the body, query or token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     jwtBlacklist.blacklist(token);
-    res.send({ message: 'Logged out successfully!' });
+    res.status(205);
   },
 
   paginateUsers(req, res) {
@@ -239,10 +258,10 @@ module.exports = {
         order: [['id', 'ASC']],
       })
       .then((users) => {
-        res.send(users);
+        res.status(200).send(users);
       })
       .catch((err) => {
-        res.send(err);
+        res.status(400).send(err);
       });
     }
   },
@@ -265,7 +284,7 @@ module.exports = {
       })
       .then((user) => {
         if (!user || user.rows.length === 0) {
-          res.send({ message: 'User not found!' });
+          res.status(404).send({ message: 'User not found!' });
         } else {
           res.status(200).send(user);
         }
