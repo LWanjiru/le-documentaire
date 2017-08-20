@@ -22,7 +22,7 @@ module.exports = (app) => {
 
   // List, Delete ALL roles
   app.route('/roles')
-  .get(RoleController.listAll)
+  .get(UserController.authenticate, RoleController.listAll)
   .delete(UserController.authenticate, UserController.admin, RoleController.deleteAll);
 
   // View, Update, Delete ONE role by title
