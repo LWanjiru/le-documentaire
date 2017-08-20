@@ -72,6 +72,7 @@ describe('Role', () => {
   it('GET /roles should return a 200 response on success getting roles', (done) => {
     Request(app)
     .get('/roles')
+    .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
       done();
@@ -196,6 +197,7 @@ describe('Role', () => {
   it('GET /roles should return a 200 response and message if no roles exist in table', (done) => {
     Request(app)
     .get('/roles')
+    .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
       expect(res.body.message).to.equal('Nothing to show.');
