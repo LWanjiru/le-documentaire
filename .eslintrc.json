@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "extends": "airbnb",
+  "ecmaFeatures": {
+        "jsx": true
+  },
+  "env": {
+      "node": true,
+      "es6": true,
+      "mocha": true,
+      "browser": true
+  },
+  "rules": {
+"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+"import/no-dynamic-require": 0
+},
+  "plugins": [
+      "import",
+      "react",
+      "jsx-a11y",
+      "import"
+  ]
+}
