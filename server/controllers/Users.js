@@ -12,7 +12,7 @@ module.exports = {
   login(req, res) {
     User.findOne({
       where: {
-        title: 'regular',
+        username: req.body.username,
       },
     })
     .then((user) => {
@@ -29,7 +29,6 @@ module.exports = {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           };
-
           res.send({
             loginDetails,
             message: 'Log in successful!',

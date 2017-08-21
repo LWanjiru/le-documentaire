@@ -336,7 +336,6 @@ describe('Documents (admin', () => {
     .get('/documents')
     .set('x-access-token', token)
     .end((err, res) => {
-      // console.log(res.body);
       expect(res.statusCode).to.equal(200);
       done();
     });

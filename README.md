@@ -9,6 +9,9 @@ https://www.pivotaltracker.com/n/projects/2072191
 ### Setup Project
 ---
 
+#### For The Back-End
+___
+
 - Clone this repository to your desktop using the command `$ git clone https://github.com/LWanjiru/le-documentaire.git`
 
 - Change directories into the repository directory using command `$ cd le-documentaire`
@@ -42,6 +45,10 @@ https://www.pivotaltracker.com/n/projects/2072191
 NB: To use the login `token` provided. Add it as an `x-access-token` attributes in your header after each login as a different user. 
 
 ```
+
+#### For The Front-End
+
+**Currently under build**
 
 
 [![Build Status](https://travis-ci.org/LWanjiru/le-documentaire.svg?branch=master)](https://travis-ci.org/LWanjiru/le-documentaire)

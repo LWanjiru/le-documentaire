@@ -30,12 +30,12 @@ class SignUp extends Component {
     console.log(this.props.apiCall);
     return (
       <div className="container row">
-        <form className="white col s12 m12 l6 offset-l5 center black-text" onChange={this.onChange}>
+        <form className="white col s12 m12 l6 offset-l3 center black-text z-depth-5" onChange={this.onChange}>
           <div className="row">
             <div className="input-field col s8">
               <i className="material-icons prefix">person</i>
               <label htmlFor="username">Username: </label>
-              <input id="username" type="text" className="validate" />
+              <input id="username" type="text" className="validate bordered" />
             </div><br />
           </div>
           <div className="row">
@@ -68,7 +68,7 @@ class SignUp extends Component {
           </div>
           <div className="row right">
             <div className="col s12">
-              <button onClick={this.onSubmit} className="btn waves-effect waves-light" type="submit" name="action">Register
+              <button onClick={this.onSubmit} className="btn blue darken-4 waves-effect waves-light" type="submit" name="action">Register
                 <i className="material-icons right">send</i>
               </button>
               <span><p>Already Registered? <a href="/login">Login Here</a></p></span>

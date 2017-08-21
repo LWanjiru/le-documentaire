@@ -124,21 +124,11 @@ module.exports = {
       offset: req.query.offset,
       order: [['id', 'ASC']],
     })
-    .then((user) => {
-      if (!req.body.title) {
-        res.send({ message: 'Please enter a title for your document.' });
-      } else if (!req.body.content || req.body.content === '') {
-        res.send({ message: 'Document body cannot be empty.' });
+    .then((document) => {
+      if (document.rows.length === 0) {
+        res.send({ message: 'There are no documents from other users in this role yet.' });
       } else {
-        const userId = user.id;
-        Document.create({
-          title: req.body.title,
-          content: req.body.content,
-          userId,
-        })
-        .then((document) => {
-          res.send(document);
-        });
+        res.send(document);
       }
     });
   },
