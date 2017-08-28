@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Materialize from 'materialize-css';
 
 class SignUp extends Component {
   constructor(props) {

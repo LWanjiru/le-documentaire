@@ -8,7 +8,6 @@ code_climate:
 before_script:
   - psql -c 'DROP DATABASE IF EXISTS test;' -U postgres; fi"
   - psql -c 'CREATE DATABASE test;' -U postgres; fi"
-  - npm install sequelize@$(echo $SEQUELIZE)
 services:
   - postgresql
 env:

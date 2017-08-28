@@ -1,5 +1,9 @@
 CACHE MANIFEST
+<<<<<<< HEAD
 # b88bf49f8f3b3c911ea1
+=======
+# 2e42d04b7bf676b67091
+>>>>>>> 675bb6b88c518a291f6da0f433f71d7bd3565652
 
 /index.bundle.js
 /index.html

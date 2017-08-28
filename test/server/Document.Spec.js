@@ -65,7 +65,7 @@ describe('Document', () => {
       });
   });
 
-  it('POST /documents responds with message when content is EMPTY', (done) => {
+  it('POST /documents responds with 400 and message when content is EMPTY', (done) => {
     Request(app)
       .post('/documents')
       .set('x-access-token', token)
