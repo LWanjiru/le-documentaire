@@ -6,7 +6,7 @@ const DEFAULT_STATE = {
   error: false,
 };
 
-export const apiCallState = state => state.apiReducer;
+export const apiCallState = state => state.ApiReducer;
 
 export default function reducer(state = DEFAULT_STATE, action = {}) {
   switch (action.type) {

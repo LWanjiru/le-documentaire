@@ -32,9 +32,11 @@ export default function signUp(user) {
     Request.post('http://localhost:8000/users')
       .send(user)
       .then((response) => {
+        console.log('i am a response', response);
         dispatch(signUpRequestSuccess(response));
       })
       .catch((message) => {
+        console.log('i am a message', message);
         dispatch(signUpRequestFail(message));
       });
   };

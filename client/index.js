@@ -8,8 +8,6 @@ import App from './components/App';
 const store = ConfigureStore();
 
 render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <Route path="/" component={App} />
-    </Provider>
-  </BrowserRouter>, document.getElementById('root'));
+  <Provider store={store}>
+    <App />
+  </Provider>, document.getElementById('root'));

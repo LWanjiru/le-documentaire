@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import Materialize from 'materialize-css';
 
 class SignUp extends Component {
   constructor(props) {
@@ -21,13 +22,11 @@ class SignUp extends Component {
     this.setState(newState);
   }
 
-  onSubmit(event) {
-    event.preventDefault();
+  onSubmit() {
     this.props.signUp(this.state);
   }
 
   render() {
-    console.log(this.props.apiCall);
     return (
       <div className="container row">
         <form className="white col s12 m12 l6 offset-l3 center black-text z-depth-5" onChange={this.onChange}>

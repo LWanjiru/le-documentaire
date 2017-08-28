@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import SearchUserContainer from '../Search/SearchUsers/SearchUserContainer';
+import { Link } from 'react-router-dom';
+// import SearchUserContainer from '../Search/SearchUsers/SearchUserContainer';
 
 export default class Header extends Component {
   render() {
@@ -10,15 +11,12 @@ export default class Header extends Component {
             <i className="material-icons prefix">track_changes</i>
             Le Documentaire
           </a>
-          <ul id="nav-mobile" className="right hide-on-med-and-down">
-            <li><SearchUserContainer /></li>
-            <li>
-              <div className="row col s12">
-                <button onClick="" className="waves-effect waves-light btn-large blue right" type="submit" name="action">Login
-                </button>
-              </div><br />
-            </li>
-          </ul>
+          <div className="right">
+            <ul>
+              <li><Link to="/signup">Sign Up</Link></li>
+              <li><Link to="/login">Login</Link></li>
+            </ul>
+          </div>
         </div>
       </nav>
     );

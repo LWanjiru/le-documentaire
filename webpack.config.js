@@ -6,7 +6,6 @@ const AppCachePlugin = require('appcache-webpack-plugin');
 
 const PORT = process.env.PORT;
 const config = {
-  // devtool: 'cheap-module-eval-source-map',
 
   entry: [
     './client/Index',
