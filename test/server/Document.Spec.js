@@ -65,7 +65,7 @@ describe('Document', () => {
       });
   });
 
-  it('POST /documents responds with message when title is EMPTY', (done) => {
+  it('POST /documents responds with message when content is EMPTY', (done) => {
     Request(app)
       .post('/documents')
       .set('x-access-token', token)
@@ -87,6 +87,7 @@ describe('Document', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.rows[0].title).to.contain('The');
       done();
     });
   });
@@ -97,6 +98,7 @@ describe('Document', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.rows[0].access).to.equal('public');
       done();
     });
   });
@@ -107,6 +109,8 @@ describe('Document', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body).to.have.property('count');
+      expect(res.body).to.have.property('rows');
       done();
     });
   });
@@ -139,6 +143,7 @@ describe('Document', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.title).to.equal('The fiery post');
       done();
     });
   });
@@ -205,14 +210,24 @@ describe('Document', () => {
     });
   });
 
-
-  it('GET /documents/users/role should return a 200 response on document found', (done) => {
+  it('GET /documents/users/:role should return a 404 response on document NOT found', (done) => {
     Request(app)
     .get('/documents/users/regular')
     .set('x-access-token', token)
     .end((err, res) => {
-      expect(res.statusCode).to.equal(200);
+      expect(res.statusCode).to.equal(404);
       expect(res.body.message).of.equal('There are no documents from other users in this role yet.');
+      done();
+    });
+  });
+
+  it('GET /documents/:id/users should return a 404 response on user document in role found', (done) => {
+    Request(app)
+    .get('/documents/2/users')
+    .set('x-access-token', token)
+    .end((err, res) => {
+      expect(res.statusCode).to.equal(404);
+      expect(res.body.message).of.equal('This user has no documents in this role.');
       done();
     });
   });
@@ -307,6 +322,8 @@ describe('Documents (admin', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.count).to.be.greaterThan(0);
+      expect(res.body.rows[0].title).to.equal('The mumbo jambo');
       done();
     });
   });
@@ -317,6 +334,7 @@ describe('Documents (admin', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.length).to.equal(2);
       done();
     });
   });
@@ -327,6 +345,7 @@ describe('Documents (admin', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.id).to.equal(3);
       done();
     });
   });
@@ -337,6 +356,8 @@ describe('Documents (admin', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.count).to.be.greaterThan(0);
+      expect(res.body.rows.length).to.be.greaterThan(0);
       done();
     });
   });

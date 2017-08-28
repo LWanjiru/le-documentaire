@@ -90,6 +90,10 @@ module.exports = (app) => {
   //  with the logged in user's role
   app.get('/documents/users/:role', UserController.authenticate, DocumentController.listDocsByRole);
 
+  // View all documents beloging to a user in the same role as the logged in user
+  // fetching by ID
+  app.get('/documents/:id/users', UserController.authenticate, DocumentController.listRoleDocsByUserId);
+
   //  Delete a document by ID
   app.delete('/documents/:id', UserController.authenticate, DocumentController.deleteOne);
 

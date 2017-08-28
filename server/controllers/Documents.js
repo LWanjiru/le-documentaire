@@ -126,9 +126,34 @@ module.exports = {
     })
     .then((document) => {
       if (document.rows.length === 0) {
-        res.send({ message: 'There are no documents from other users in this role yet.' });
+        res.status(404).send({ message: 'There are no documents from other users in this role yet.' });
       } else {
-        res.send(document);
+        res.status(200).send(document);
+      }
+    });
+  },
+
+  // Fetch role document by user ID
+  // Use the 'userId', 'access' and 'userRole' values of a logged in user
+  // to view paginated documents allowed only to users with similar roles
+  listRoleDocsByUserId(req, res) {
+    const roleUser = req.decoded;
+
+    Document.findAndCountAll({
+      where: {
+        userId: req.params.id,
+        access: 'role',
+        userRole: roleUser.title,
+      },
+      limit: req.query.limit,
+      offset: req.query.offset,
+      order: [['id', 'ASC']],
+    })
+    .then((document) => {
+      if (document.rows.length === 0) {
+        res.status(404).send({ message: 'This user has no documents in this role.' });
+      } else {
+        res.status(200).send(document);
       }
     });
   },

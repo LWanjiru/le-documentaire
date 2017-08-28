@@ -172,6 +172,7 @@ describe('User (regular)', () => {
     .set('x-access-token', token)
     .end((err, res) => {
       expect(res.statusCode).to.equal(200);
+      expect(res.body.length).to.equal(3);
       done();
     });
   });
@@ -181,7 +182,6 @@ describe('User (regular)', () => {
       .get('/users/?limit=2&offset=0')
       .set('x-access-token', token)
       .end((err, res) => {
-        // console.log(res.body.count);
         expect(res.statusCode).to.equal(200);
         expect(res.body).to.have.property('count');
         done();
@@ -194,6 +194,7 @@ describe('User (regular)', () => {
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(400);
+        expect(res.body.name).to.equal('SequelizeDatabaseError');
         done();
       });
   });
@@ -226,6 +227,7 @@ describe('User (regular)', () => {
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
+        expect(res.body.rows[0].username).to.equal('musketeer');
         done();
       });
   });
@@ -263,7 +265,6 @@ describe('User (regular)', () => {
         password: '',
       })
       .end((err, res) => {
-        // expect(res.statusCode).to.equal(403);
         expect(res.body.message).to.equal('Please enter your new password!');
         done();
       });
@@ -425,7 +426,6 @@ describe('User (admin)', () => {
       .delete('/users/3')
       .set('x-access-token', token)
       .end((err, res) => {
-        // expect(res.statusCode).to.equal();
         expect(res.body.message).to.equal('User deleted!');
         done();
       });
