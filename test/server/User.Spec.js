@@ -10,7 +10,7 @@ describe('User (regular)', () => {
   before((done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'musketeer',
       password: 'soledad123',
@@ -24,6 +24,7 @@ describe('User (regular)', () => {
   it('POST /users responds with 201 on user create success', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: 'maryJ',
         firstName: 'Mary',
@@ -42,6 +43,7 @@ describe('User (regular)', () => {
   it('POST /users responds with 409 on user create DUPLICATE exists', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: 'maryJ',
         firstName: 'Mary',
@@ -59,6 +61,7 @@ describe('User (regular)', () => {
   it('POST /users responds with 400 on user create with EMPTY fields', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: '',
         firstName: 'Mary',
@@ -76,6 +79,7 @@ describe('User (regular)', () => {
   it('POST /users responds with 409 on user create if EMAIL is registered to EXISTING user', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: 'billy',
         firstName: 'billz',
@@ -93,6 +97,7 @@ describe('User (regular)', () => {
   it('POST /users responds with 422 on user create if Password is LESS that 6 characters long', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: 'billy',
         firstName: 'billz',
@@ -110,6 +115,7 @@ describe('User (regular)', () => {
   it('POST /users responds with 422 on user create if Email DOES NOT follow valid format', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: 'billy',
         firstName: 'billz',
@@ -127,7 +133,7 @@ describe('User (regular)', () => {
   it('POST /users/login should return message if password doesn\'t match user', (done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'maryJ',
       password: '5554445',
@@ -141,7 +147,7 @@ describe('User (regular)', () => {
   it('POST /users/login should return message if username or password fields are empty', (done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: '',
       password: '11112222',
@@ -155,7 +161,7 @@ describe('User (regular)', () => {
   it('POST /users/login should return message if user doesn\'t exist', (done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'boris',
       password: '5554445',
@@ -353,7 +359,7 @@ describe('User (admin)', () => {
   beforeEach((done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'admin',
       password: 'administrator',

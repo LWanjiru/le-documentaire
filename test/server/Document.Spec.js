@@ -10,7 +10,7 @@ describe('Document', () => {
   before((done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'musketeer',
       password: 'soledad123',
@@ -19,7 +19,7 @@ describe('Document', () => {
       token = res.body.token;
       Request(app)
       .post('/documents')
-      .set('Accept', 'application/x-www-form-urlencoded')
+      .set('Accept', 'application/json')
       .set('x-access-token', token)
       .send({
         title: 'The fiery',
@@ -294,7 +294,7 @@ describe('Documents (admin', () => {
   before((done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'admin',
       password: 'administrator',
@@ -303,7 +303,7 @@ describe('Documents (admin', () => {
       token = res.body.token;
       Request(app)
       .post('/documents')
-      .set('Accept', 'application/x-www-form-urlencoded')
+      .set('Accept', 'application/json')
       .set('x-access-token', token)
       .send({
         title: 'The mumbo jambo',

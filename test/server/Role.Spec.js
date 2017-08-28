@@ -11,7 +11,7 @@ describe('Role', () => {
   before((done) => {
     Request(app)
     .post('/users/login')
-    .set('Accept', 'application/x-www-form-urlencoded')
+    .set('Accept', 'application/json')
     .send({
       username: 'admin',
       password: 'administrator',
@@ -209,6 +209,7 @@ describe('Role', () => {
   it('POST /users responds with 500 on user create user if role DOES NOT exist', (done) => {
     Request(app)
       .post('/users/')
+      .set('Accept', 'application/json')
       .send({
         username: 'purplet',
         firstName: 'Mary',
