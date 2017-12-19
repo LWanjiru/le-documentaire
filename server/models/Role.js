@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     classMethods: {
       associate(models) {
-        // associations defined here
         Role.hasMany(models.User, {
           foreignKey: 'title',
           as: 'user',
