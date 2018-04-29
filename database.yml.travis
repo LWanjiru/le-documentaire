@@ -1,2 +1,8 @@
-before_script:
-  - cp config/database.yml.travis config/database.yml
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: documentor-test
+  pool: 5
+  username: linnettewanjiru
+  password: null
+  
