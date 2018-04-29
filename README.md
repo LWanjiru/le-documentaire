@@ -1,10 +1,11 @@
 # Le Documentaire
 
-Manage all your documents in one place, for the workspace.
+- Manage all your documents in one place, for the workspace.
 ---
 
 ### Pivotal Tracker Stories
-https://www.pivotaltracker.com/n/projects/2072191
+
+- https://www.pivotaltracker.com/n/projects/2072191
 ---
 
 ### Setup Project
