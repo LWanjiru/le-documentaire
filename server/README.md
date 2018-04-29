@@ -22,7 +22,7 @@
 
 - Once you have set up your `PostgreSQL` database; I've named mine `documentor-dev`.  (See server/config/config.json for database configurations). and change the `username` with your useraname and the `password` too, if you choose to have one.  
 
-- Run `$ sequelize db:migrate && sequelize db:seed:all` . This will create Role, User and Document tables in your database, alongside a SequelizeMeta table which contains details of the migration files. The second part will populate the `Role` and `user` tables with `admin` & `regular` roles, and a corresponding user for each role in the `User` table.
+- Run `$ sequelize db:migrate && sequelize db:seed:all` . This will create `Role`, `User` and `Document` tables in your database, alongside a `SequelizeMeta` table which contains details of the migration files. The second part will populate the `Role` and `user` tables with `admin` & `regular` roles, and a corresponding user for each role in the `User` table.
 
 - Create a file named `config.js` in the `server/config` folder and create your `secret` which will be used when signing your token for authentication. `NOTE`: This file should be added to `.gitignore` as it contains authentication information.
 
