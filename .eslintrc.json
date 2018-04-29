@@ -12,7 +12,8 @@
     },
     "rules": {
   "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-  "import/no-dynamic-require": 0
+  "import/no-dynamic-require": 0,
+  "jsx-a11y/href-no-hash": 0
 },
     "plugins": [
         "import",
