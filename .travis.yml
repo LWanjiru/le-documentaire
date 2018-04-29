@@ -7,13 +7,12 @@ script:
   - npm run server-test-path
 code_climate:
   repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
-before_script:
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS test;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE test;' -U postgres; fi"
-  - npm install sequelize@$(echo $SEQUELIZE)
 services:
   - postgresql
+before_script:
+  - cp config/database.yml.travis config/database.yml
 env:
-  - DB=postgres SEQUELIZE=4.3.1
+  global:
+    - PGPORT=5432
 addons:
   postgresql: "9.6"
