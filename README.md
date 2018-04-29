@@ -1,13 +1,13 @@
 # Le Documentaire
----
+
 Manage all your documents in one place, for the workspace.
+---
 
 ### Pivotal Tracker Stories
----
 https://www.pivotaltracker.com/n/projects/2072191
+---
 
 ### Setup Project
----
 
 - Clone this repository to your desktop using the command `$ git clone https://github.com/LWanjiru/le-documentaire.git`
 
@@ -44,7 +44,14 @@ https://www.pivotaltracker.com/n/projects/2072191
 NB: To use the login `token` provided. Add it as an `x-access-token` attributes in your header after each login as a different user. 
 
 ```
+---
 
+### Testing
+
+- Make sure that you have your databases for the different environments configured as per the guidance in the `Setup` section of this README document.
+
+- Run `$ npm test` to view the tests and the test coverage.
+---
 
 [![Build Status](https://travis-ci.org/LWanjiru/le-documentaire.svg?branch=master)](https://travis-ci.org/LWanjiru/le-documentaire)
 [![Code Climate](https://codeclimate.com/github/LWanjiru/le-documentaire/badges/gpa.svg)](https://codeclimate.com/github/LWanjiru/le-documentaire)
