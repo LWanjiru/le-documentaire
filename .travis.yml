@@ -10,7 +10,7 @@ code_climate:
 services:
   - postgresql
 before_script:
-  - cp config/database.yml.travis config/database.yml
+  - cp ./database.yml.travis ./server/config/config.json
 env:
   global:
     - PGPORT=5432
