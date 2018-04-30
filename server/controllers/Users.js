@@ -15,35 +15,35 @@ module.exports = {
         username: req.body.username,
       },
     })
-    .then((user) => {
-      if (user) {
-        const hashPassword = user.password;
-        const passwordValue = passwordHash.verify(req.body.password, hashPassword);
-        if (passwordValue) {
-          const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
-          const loginDetails = {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            title: user.title,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-          };
+      .then((user) => {
+        if (user) {
+          const hashPassword = user.password;
+          const passwordValue = passwordHash.verify(req.body.password, hashPassword);
+          if (passwordValue) {
+            const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
+            const loginDetails = {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              title: user.title,
+              createdAt: user.createdAt,
+              updatedAt: user.updatedAt,
+            };
 
-          res.send({
-            loginDetails,
-            message: 'Log in successful!',
-            token,
-          });
+            res.send({
+              loginDetails,
+              message: 'Log in successful!',
+              token,
+            });
+          } else {
+            res.send({ message: 'password does not match the username' });
+          }
+        } else if (!req.body.username || !req.body.password || req.body.username === '' || req.body.password === '') {
+          res.send({ message: 'username/password fields cannot be empty' });
         } else {
-          res.send({ message: 'password does not match the username' });
+          res.send({ message: 'This user account does not exist. Create one' });
         }
-      } else if (!req.body.username || !req.body.password || req.body.username === '' || req.body.password === '') {
-        res.send({ message: 'username/password fields cannot be empty' });
-      } else {
-        res.send({ message: 'This user account does not exist. Create one' });
-      }
-    });
+      });
   },
 
   // Check whether the default role exists, if not, send message to alert admin
@@ -56,52 +56,52 @@ module.exports = {
         title: 'regular',
       },
     })
-    .then((role) => {
-      if (role) {
-        User.findOne({
-          where: {
-            username: req.body.username,
-          },
-        })
-        .then((user) => {
-          if (user) {
-            res.status(409).send({ message: 'This username is already in use! Please create a unique one.' });
-          } else if (
-              !req.body.username || !req.body.firstName ||
+      .then((role) => {
+        if (role) {
+          User.findOne({
+            where: {
+              username: req.body.username,
+            },
+          })
+            .then((user) => {
+              if (user) {
+                res.status(409).send({ message: 'This username is already in use! Please create a unique one.' });
+              } else if (
+                !req.body.username || !req.body.firstName ||
               !req.body.lastName || !req.body.password || !req.body.email) {
-            res.status(400).send({ message: 'All fields are required!' });
-          } else if (user === null) {
-            User.findOne({
-              where: {
-                email: req.body.email,
-              },
-            })
-            .then((email) => {
-              const expression = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-              if (email) {
-                res.status(409).send({ message: 'Email is registered to a different username.' });
-              } else if ((req.body.password).length < 6) {
-                res.status(422).send({ message: 'Password must be between 6 and 20 characters' });
-              } else if (expression.test(req.body.email)) {
-                User.create({
-                  username: req.body.username,
-                  firstName: req.body.firstName,
-                  lastName: req.body.lastName,
-                  email: req.body.email,
-                  password: passwordHash.generate(req.body.password),
+                res.status(400).send({ message: 'All fields are required!' });
+              } else if (user === null) {
+                User.findOne({
+                  where: {
+                    email: req.body.email,
+                  },
                 })
-                .then(res.status(201).send({ message: 'User created successfully!' }));
-              } else {
-                res.status(422).send({ message: 'Enter email using a valid format ie.[myemail@example.com]' });
+                  .then((email) => {
+                    const expression = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                    if (email) {
+                      res.status(409).send({ message: 'Email is registered to a different username.' });
+                    } else if ((req.body.password).length < 6) {
+                      res.status(422).send({ message: 'Password must be between 6 and 20 characters' });
+                    } else if (expression.test(req.body.email)) {
+                      User.create({
+                        username: req.body.username,
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        email: req.body.email,
+                        password: passwordHash.generate(req.body.password),
+                      })
+                        .then(res.status(201).send({ message: 'User created successfully!' }));
+                    } else {
+                      res.status(422).send({ message: 'Enter email using a valid format ie.[myemail@example.com]' });
+                    }
+                  });
               }
             });
-          }
-        });
-      } else {
-        res.status(500).send({ message: 'Cannot create user. Please contact Admin' });
-      }
-    });
+        } else {
+          res.status(500).send({ message: 'Cannot create user. Please contact Admin' });
+        }
+      });
   },
 
   // List all users
@@ -110,13 +110,13 @@ module.exports = {
     User.findAll({
       attributes: ['username', 'email', 'title', 'createdAt', 'updatedAt'],
     })
-    .then((user) => {
-      if (user.length === 0) {
-        res.status(200).send({ message: 'Nothing to show.' });
-      } else {
-        res.status(200).send(user);
-      }
-    });
+      .then((user) => {
+        if (user.length === 0) {
+          res.status(200).send({ message: 'Nothing to show.' });
+        } else {
+          res.status(200).send(user);
+        }
+      });
   },
 
   // Get one user by ID
@@ -124,46 +124,46 @@ module.exports = {
   // if a user with the specified ID is found
   listOne(req, res) {
     User.findOne({ where: { id: req.params.id } })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'User not found!' });
-      } else {
-        const viewUser = {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          title: user.title,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        };
-        res.status(200).send(viewUser);
-      }
-    });
+      .then((user) => {
+        if (!user) {
+          res.status(404).send({ message: 'User not found!' });
+        } else {
+          const viewUser = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            title: user.title,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          };
+          res.status(200).send(viewUser);
+        }
+      });
   },
 
   //  Fetch a user by ID and update username, email, or password field
   // Return message on successful update
   update(req, res) {
     User.findOne({ where: { id: req.params.id } })
-    .then((user) => {
-      if (user) {
-        if (req.params.id !== req.decoded.id.toString()) {
-          res.status(403).send({ message: 'That action is not allowed. You can only edit your own password.' });
-        } else if (!req.body.password || req.body.password === '') {
-          res.send({ message: 'Please enter your new password!' });
+      .then((user) => {
+        if (user) {
+          if (req.params.id !== req.decoded.id.toString()) {
+            res.status(403).send({ message: 'That action is not allowed. You can only edit your own password.' });
+          } else if (!req.body.password || req.body.password === '') {
+            res.send({ message: 'Please enter your new password!' });
+          } else {
+            user.updateAttributes({
+              username: req.body.username || user.username,
+              email: req.body.email || user.email,
+              password: passwordHash.generate(req.body.password) || user.passsword,
+            }).then(() => {
+              res.status(200).send({ message: 'Your profile has been updated!' });
+            });
+          }
         } else {
-          user.updateAttributes({
-            username: req.body.username || user.username,
-            email: req.body.email || user.email,
-            password: passwordHash.generate(req.body.password) || user.passsword,
-          }).then(() => {
-            res.status(200).send({ message: 'Your profile has been updated!' });
-          });
+          res.status(404).send({ message: 'User doesn\'t exist!' });
         }
-      } else {
-        res.status(404).send({ message: 'User doesn\'t exist!' });
-      }
-    });
+      });
   },
 
   // Delete all users
@@ -227,17 +227,17 @@ module.exports = {
         id: user.id,
       },
     })
-    .then((foundUser) => {
-      if (foundUser) {
-        if (foundUser.title === 'admin') {
-          next();
+      .then((foundUser) => {
+        if (foundUser) {
+          if (foundUser.title === 'admin') {
+            next();
+          } else {
+            res.status(401).send({ message: 'You do not have the required permissions.' });
+          }
         } else {
-          res.status(401).send({ message: 'You do not have the required permissions.' });
+          res.status(404).send({ message: 'User not found!' });
         }
-      } else {
-        res.status(404).send({ message: 'User not found!' });
-      }
-    });
+      });
   },
 
   // Logout the user by blacklisting the current token
@@ -258,12 +258,12 @@ module.exports = {
       attributes: ['id', 'username', 'title', 'createdAt'],
       order: [['id', 'ASC']],
     })
-    .then((users) => {
-      res.status(200).send(users);
-    })
-    .catch((err) => {
-      res.status(400).send(err);
-    });
+      .then((users) => {
+        res.status(200).send(users);
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+      });
   },
 
   // Search for a with their username or email
@@ -282,13 +282,13 @@ module.exports = {
         attributes: ['username', 'email'],
         order: [['username', 'ASC']],
       })
-      .then((user) => {
-        if (!user || user.rows.length === 0) {
-          res.status(404).send({ message: 'User not found!' });
-        } else {
-          res.status(200).send(user);
-        }
-      });
+        .then((user) => {
+          if (!user || user.rows.length === 0) {
+            res.status(404).send({ message: 'User not found!' });
+          } else {
+            res.status(200).send(user);
+          }
+        });
     }
   },
 };

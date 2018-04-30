@@ -22,14 +22,14 @@ module.exports = (app) => {
 
   // List, Delete ALL roles
   app.route('/roles')
-  .get(UserController.authenticate, RoleController.listAll)
-  .delete(UserController.authenticate, UserController.admin, RoleController.deleteAll);
+    .get(UserController.authenticate, RoleController.listAll)
+    .delete(UserController.authenticate, UserController.admin, RoleController.deleteAll);
 
   // View, Update, Delete ONE role by title
   app.route('/roles/:title')
-  .get(UserController.authenticate, UserController.admin, RoleController.listOne)
-  .put(UserController.authenticate, UserController.admin, RoleController.update)
-  .delete(UserController.authenticate, UserController.admin, RoleController.deleteOne);
+    .get(UserController.authenticate, UserController.admin, RoleController.listOne)
+    .put(UserController.authenticate, UserController.admin, RoleController.update)
+    .delete(UserController.authenticate, UserController.admin, RoleController.deleteOne);
 
   /**
    * USER routes
@@ -45,27 +45,27 @@ module.exports = (app) => {
 
   // Paginate and List all users
   app.route('/users/')
-  .get(UserController.authenticate, UserController.paginateUsers)
+    .get(UserController.authenticate, UserController.paginateUsers)
 
-   // Delete ALL users(Admin)
-  .delete(UserController.authenticate, UserController.admin, UserController.deleteAll);
+  // Delete ALL users(Admin)
+    .delete(UserController.authenticate, UserController.admin, UserController.deleteAll);
 
-    // List All users without pagination
+  // List All users without pagination
   app.get('/users/all', UserController.authenticate, UserController.listAll);
 
   // List, Update one user by ID
   app.route('/users/:id')
-  .get(UserController.authenticate, UserController.listOne)
-  .put(UserController.authenticate, UserController.update)
+    .get(UserController.authenticate, UserController.listOne)
+    .put(UserController.authenticate, UserController.update)
 
   // Delete a user (Admin)
-  .delete(UserController.authenticate, UserController.admin, UserController.deleteOne);
+    .delete(UserController.authenticate, UserController.admin, UserController.deleteOne);
 
 
   // Search for a user
   app.get('/search/users/', UserController.authenticate, UserController.userSearch);
 
- /**
+  /**
   * DOCUMENT routes
   */
   // Create a document
@@ -75,15 +75,15 @@ module.exports = (app) => {
   app.get('/documents/all', UserController.authenticate, UserController.admin, DocumentController.listAll);
 
   // View All Public documents
-  app.get('/documents/public', DocumentController.listPublic);
+  app.get('/', DocumentController.listPublic);
 
   // View all of a user's documents
   app.get('/users/:id/documents', UserController.authenticate, DocumentController.listUserDocs);
 
   // Get or Delete a document by ID
   app.route('/documents/:id')
-  .get(UserController.authenticate, DocumentController.listOneDoc)
-  .put(UserController.authenticate, DocumentController.update);
+    .get(UserController.authenticate, DocumentController.listOneDoc)
+    .put(UserController.authenticate, DocumentController.update);
 
 
   // View all documents whose access is allowed to only users

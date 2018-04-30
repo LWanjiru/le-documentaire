@@ -13,17 +13,17 @@ module.exports = {
           title: req.body.title.toLowerCase(),
         },
       })
-      .then((role) => {
-        if (role) {
-          res.status(409).send({ message: 'Role already exists!' });
-        } else {
-          Role.create({
-            title: req.body.title.toLowerCase(),
-            description: req.body.description,
-          })
-          .then(() => res.status(201).send({ message: 'Role created successfully!' }));
-        }
-      });
+        .then((role) => {
+          if (role) {
+            res.status(409).send({ message: 'Role already exists!' });
+          } else {
+            Role.create({
+              title: req.body.title.toLowerCase(),
+              description: req.body.description,
+            })
+              .then(() => res.status(201).send({ message: 'Role created successfully!' }));
+          }
+        });
     }
   },
 
@@ -31,47 +31,47 @@ module.exports = {
   // Return message if empty or a list of existing roles
   listAll(req, res) {
     Role.findAll()
-    .then((role) => {
-      if (role.length === 0) {
-        res.status(200).send({ message: 'Nothing to show.' });
-      } else {
-        res.status(200).send(role);
-      }
-    });
+      .then((role) => {
+        if (role.length === 0) {
+          res.status(200).send({ message: 'Nothing to show.' });
+        } else {
+          res.status(200).send(role);
+        }
+      });
   },
 
   // Find a specified role by TITLE
   // Return message if not found or the 'role' if it exists
   listOne(req, res) {
     Role.findOne({ where: { title: req.params.title } })
-    .then((role) => {
-      if (!role) {
-        res.status(404).send({ message: 'Role not found!' });
-      } else {
-        res.status(200).send(role);
-      }
-    });
+      .then((role) => {
+        if (!role) {
+          res.status(404).send({ message: 'Role not found!' });
+        } else {
+          res.status(200).send(role);
+        }
+      });
   },
 
   // Find a role by TITLE and Update the description
   // Return success message if updated
   update(req, res) {
     Role.findOne({ where: { title: req.params.title } })
-    .then((role) => {
-      if (role) {
-        role.updateAttributes({
-          description: req.body.description,
-        }).then(() => {
-          if (!req.body.description) {
-            res.status(400).send({ message: 'Please enter a description for the role!' });
-          } else {
-            res.status(200).send({ message: 'Role updated!' });
-          }
-        });
-      } else {
-        res.status(404).send({ message: 'Role doesn\'t exist!' });
-      }
-    });
+      .then((role) => {
+        if (role) {
+          role.updateAttributes({
+            description: req.body.description,
+          }).then(() => {
+            if (!req.body.description) {
+              res.status(400).send({ message: 'Please enter a description for the role!' });
+            } else {
+              res.status(200).send({ message: 'Role updated!' });
+            }
+          });
+        } else {
+          res.status(404).send({ message: 'Role doesn\'t exist!' });
+        }
+      });
   },
 
   // Delete all the roles from the Role table
@@ -79,7 +79,7 @@ module.exports = {
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
       Role.truncate({ cascade: true, restartIdentity: true })
-      .then(() => res.sendStatus(204));
+        .then(() => res.sendStatus(204));
     } else {
       res.status(403).send({ message: 'That action is not allowed!' });
     }
