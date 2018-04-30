@@ -4,7 +4,7 @@ node_js:
   - "8"
   - "7"
 script:
-  - npm run server-test-path
+  - npm test
 code_climate:
   repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
 services:
