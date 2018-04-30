@@ -6,8 +6,7 @@ code_climate:
   repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
 services:
   - postgresql
-env:
-  - NODE_ENV=test
+env: DIALECT=postgres SEQUELIZE=latest
   global:
     - PGPORT=5432
 before_script:
