@@ -12,7 +12,7 @@ env:
     - PGPORT=5432
 before_script:
   - cp ./database.yml.travis ./server/config/config.json
-  - npm install sequelize@$(echo $SEQUELIZE)
+  - npm install sequelize
 script:
   - npm test
 after_success: npm run coverage
