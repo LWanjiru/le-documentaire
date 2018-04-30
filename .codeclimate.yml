@@ -2,7 +2,7 @@ engines:
   csslint:
     enabled: true
   duplication:
-    enabled: false
+    enabled: true
     config:
       languages:
       - javascript
@@ -26,3 +26,5 @@ exclude_paths:
 - coverage/
 - favicon
 - package-lock.json
+- materialize/
+- .vscode
