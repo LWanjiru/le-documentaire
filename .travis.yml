@@ -1,8 +1,7 @@
 language: node_js
 node_js:
   - '6'
-install:
-  - npm install
+install: npm install
 code_climate:
   repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
 services:
@@ -13,12 +12,11 @@ env:
     - PGPORT=5432
 before_script:
   - cp ./database.yml.travis ./server/config/config.json
-  -- npm run build
+  - npm run build
   - sequelize db:migrate
   - sequelize db:seed:all
 script:
   - npm test
-after_success: 
-  - npm run coverage
+after_success: npm run coverage
 addons:
   postgresql: "9.6"
