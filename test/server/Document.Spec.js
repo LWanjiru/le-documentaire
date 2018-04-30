@@ -91,9 +91,9 @@ describe('Document', () => {
       });
   });
 
-  it('GET /documents/public should return a 200 response on success getting public documents', (done) => {
+  it('GET / should return a 200 response on success getting public documents', (done) => {
     Request(app)
-      .get('/documents/public')
+      .get('/')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
