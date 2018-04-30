@@ -51,6 +51,7 @@ NB: To use the login `token` provided. Add it as an `x-access-token` attributes 
 - Make sure that you have your databases for the different environments configured as per the guidance in the `Setup` section of this README document.
 
 - Run `$ npm test` to view the tests and the test coverage.
+- This should open a html page showing the test coverage for all the files.
 ---
 
 [![Build Status](https://travis-ci.org/LWanjiru/le-documentaire.svg?branch=master)](https://travis-ci.org/LWanjiru/le-documentaire)
