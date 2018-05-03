@@ -12,6 +12,9 @@ env: DIALECT=postgres SEQUELIZE=latest
 before_script:
   - cp ./database.yml.travis ./server/config/config.json
   - npm install sequelize
+  - sequelize db:migrate:undo:all
+  - sequelize db:migrate
+  - sequelize db:seed:all
 script:
   - npm test
 after_success: npm run coverage
