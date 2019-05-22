@@ -2,11 +2,14 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const AppCachePlugin = require('appcache-webpack-plugin');
+const AppCachePlugin = require('appcache-webpack-plugin');
 
 const PORT = process.env.PORT;
 const config = {
+  // devtool: 'cheap-module-eval-source-map',
+
   entry: [
+    'webpack-hot-middleware/client',
     './client/index',
   ],
   output: {
@@ -30,20 +33,20 @@ const config = {
       inject: true,
     }),
     new ExtractTextPlugin({
-      filename: getPath => getPath('index.scss').replace('scss', 'css'),
+      filename: getPath => getPath('materialize.scss').replace('scss', 'css'),
       allChunks: true,
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
 
-    // new AppCachePlugin({
-    //   exclude: ['.htaccess'],
-    // }),
+    new AppCachePlugin({
+      exclude: ['.htaccess'],
+    }),
   ],
   module: {
     rules: [
       // Match both .js and .jsx when compiling
-      { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: /node_modules|bower_components/ },
+      { test: /\.(js|jsx)$/, use: ['react-hot-loader', 'babel-loader'], include: path.join(__dirname, 'client'), exclude: /node_modules|bower_components/ },
 
       // Extract CSS
       {
@@ -66,6 +69,9 @@ const config = {
           'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false',
         ],
       },
+
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' },
     ],
   },
 };
