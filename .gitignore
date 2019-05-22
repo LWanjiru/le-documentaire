@@ -1,4 +1,10 @@
 node_modules/
 coverage/
 .vscode
-jwt-data
+jwt-data*
+config.js
+npm-debug.log.**
+npm-debug.log
+.DS_Store
+.env
+dist/
