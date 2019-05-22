@@ -3,7 +3,11 @@ const UserController = require('../controllers/Users');
 const DocumentController = require('../controllers/Documents');
 
 
+<<<<<<< HEAD
 require('../App');
+=======
+require('./../../app');
+>>>>>>> [feature #148963113] modify .travis.yml and package.json
 
 module.exports = (app) => {
   /**

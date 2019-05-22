@@ -1,5 +1,5 @@
 /* global describe it */
-const app = require('./../../../App');
+const app = require('./../../../app');
 const request = require('supertest');
 const db = require('./../../models');
 

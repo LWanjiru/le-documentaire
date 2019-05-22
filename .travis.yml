@@ -1,25 +1,11 @@
 language: node_js
 node_js:
-<<<<<<< HEAD
-<<<<<<< HEAD
   - "6"
-=======
   - "8"
   - "7"
-=======
->>>>>>> [feature #148963113] modify .travis.yml and package.json
-  - "6"
-  
->>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing
 script:
  - npm test
 
-<<<<<<< HEAD
-=======
-before_install:
-  - npm install
-
->>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing
 addons:
   code_climate:
     repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
