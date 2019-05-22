@@ -42,20 +42,10 @@ module.exports = {
   // Validate email and generate password hash
   // Return created user and message on success
   create(req, res) {
-<<<<<<< HEAD
     Role.findOne({
       where: {
         title: 'regular',
       },
-=======
-    User.create({
-      username: req.body.username,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: req.body.password,
-      title: req.body.title,
->>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing
     })
     .then((role) => {
       if (role) {
