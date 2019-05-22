@@ -33,7 +33,7 @@ module.exports = {
     Role.findAll()
     .then((role) => {
       if (role.length === 0) {
-        res.status(204).send({ message: 'Nothing to show.' });
+        res.status(200).send({ message: 'Nothing to show.' });
       } else {
         res.status(200).send(role);
       }
@@ -115,7 +115,7 @@ module.exports = {
       if (!role) {
         res.status(404).send({ message: 'Role not found!' });
       } else {
-        res.send(200, role);
+        res.status(200).res.send(role);
       }
     });
   },
@@ -136,7 +136,7 @@ module.exports = {
             title: req.body.title.toLowerCase(),
             description: req.body.description,
           }).then(() => {
-            res.send(role);
+            res.status(200).send({ message: 'Role updated!'});
           });
         } else {
           res.status(404)
