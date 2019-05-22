@@ -3,11 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: {
-        args: true,
-        message: 'this role already exists!',
-        required: true,
-      },
+      unique: true,
       primaryKey: true,
     },
     description: DataTypes.STRING,
