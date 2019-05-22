@@ -16,7 +16,7 @@ export default class DocumentList extends Component {
   fetchData() {
     // this.setState({ isLoading: true });
 
-    Request.get('http://localhost:8000/documents/public')
+    Request.get('http://localhost:8000/')
       .then((response) => {
         this.setState((Object.assign({}, { documents: response.body.rows })
         ));

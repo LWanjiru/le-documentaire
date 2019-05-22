@@ -12,41 +12,41 @@ module.exports = {
         username: decoded.username,
       },
     })
-    .then((user) => {
-      if (!req.body.title) {
-        res.status(400).send({ message: 'Please enter a title for your document.' });
-      } else if (!req.body.content || req.body.content === '') {
-        res.status(400).send({ message: 'Document body cannot be empty.' });
-      } else {
-        const userRole = decoded.title;
-        const userId = user.id;
-        const owner = decoded.username;
+      .then((user) => {
+        if (!req.body.title) {
+          res.status(400).send({ message: 'Please enter a title for your document.' });
+        } else if (!req.body.content || req.body.content === '') {
+          res.status(400).send({ message: 'Document body cannot be empty.' });
+        } else {
+          const userRole = decoded.title;
+          const userId = user.id;
+          const owner = decoded.username;
 
-        Document.create({
-          title: req.body.title,
-          content: req.body.content,
-          access: req.body.access || 'private',
-          owner,
-          userId,
-          userRole,
-        })
-        .then((document) => {
-          res.status(201).send(document);
-        });
-      }
-    });
+          Document.create({
+            title: req.body.title,
+            content: req.body.content,
+            access: req.body.access || 'private',
+            owner,
+            userId,
+            userRole,
+          })
+            .then((document) => {
+              res.status(201).send(document);
+            });
+        }
+      });
   },
 
   // List all documents in the document table without any constraints
   listAll(req, res) {
     Document.findAll()
-    .then((document) => {
-      if (document.length === 0) {
-        res.status(200).send({ message: 'No documents created yet. Create one' });
-      } else {
-        res.status(200).send(document);
-      }
-    });
+      .then((document) => {
+        if (document.length === 0) {
+          res.status(200).send({ message: 'No documents created yet. Create one' });
+        } else {
+          res.status(200).send(document);
+        }
+      });
   },
 
   // List all public documents
@@ -61,13 +61,13 @@ module.exports = {
       offset: req.query.offset,
       order: [['id', 'ASC']],
     })
-    .then((document) => {
-      if (document.length === 0) {
-        res.status(200).send({ message: 'No Public documents. Sign up to create one.' });
-      } else {
-        res.status(200).send(document);
-      }
-    });
+      .then((document) => {
+        if (document.count === 0) {
+          res.status(200).send({ message: 'No Public documents. Sign up to create one.' });
+        } else {
+          res.status(200).send(document);
+        }
+      });
   },
 
   // Fetch all a user's documents by ID
@@ -83,13 +83,13 @@ module.exports = {
       offset: req.query.offset,
       order: [['id', 'ASC']],
     })
-    .then((document) => {
-      if (document.length === 0) {
-        res.status(200).send({ message: 'You haven\'t created any documents yet.' });
-      } else {
-        res.status(200).send(document);
-      }
-    });
+      .then((document) => {
+        if (document.length === 0) {
+          res.status(200).send({ message: 'You haven\'t created any documents yet.' });
+        } else {
+          res.status(200).send(document);
+        }
+      });
   },
 
   // Get one document using a specified ID
@@ -98,15 +98,15 @@ module.exports = {
     const user = req.decoded;
 
     Document.findOne({ where: { id: req.params.id } })
-    .then((document) => {
-      if (!document) {
-        res.status(404).send({ message: 'Document not found!' });
-      } else if (document.access === 'public' || document.userId === user.id) {
-        res.status(200).send(document);
-      } else {
-        res.send({ message: 'You do not have the permissions to view that document' });
-      }
-    });
+      .then((document) => {
+        if (!document) {
+          res.status(404).send({ message: 'Document not found!' });
+        } else if (document.access === 'public' || document.userId === user.id) {
+          res.status(200).send(document);
+        } else {
+          res.send({ message: 'You do not have the permissions to view that document' });
+        }
+      });
   },
 
   // List documents by role
@@ -163,20 +163,20 @@ module.exports = {
       res.send({ message: 'Both fields are required' });
     } else {
       Document.findOne({ where: { id: req.params.id } })
-      .then((document) => {
-        if (!document) {
-          res.status(404).send({ message: 'Document could not be found!' });
-        } else if (document.userId !== req.decoded.id) {
-          res.status(401).send({ message: 'You can only update documents you own!' });
-        } else {
-          document.updateAttributes({
-            title: req.body.title || document.title,
-            content: req.body.content || document.content,
-          }).then(() => {
-            res.status(200).send({ message: 'Your document was successfully updated!' });
-          });
-        }
-      });
+        .then((document) => {
+          if (!document) {
+            res.status(404).send({ message: 'Document could not be found!' });
+          } else if (document.userId !== req.decoded.id) {
+            res.status(401).send({ message: 'You can only update documents you own!' });
+          } else {
+            document.updateAttributes({
+              title: req.body.title || document.title,
+              content: req.body.content || document.content,
+            }).then(() => {
+              res.status(200).send({ message: 'Your document was successfully updated!' });
+            });
+          }
+        });
     }
   },
 
@@ -214,16 +214,16 @@ module.exports = {
       offset: req.query.offset,
       order: [['id', 'ASC']],
     })
-    .then((document) => {
-      if (document.rows.length === 0) {
-        res.send({ message: 'There are no documents here yet. Create one.' });
-      } else {
-        res.status(200).send(document);
-      }
-    });
+      .then((document) => {
+        if (document.rows.length === 0) {
+          res.send({ message: 'There are no documents here yet. Create one.' });
+        } else {
+          res.status(200).send(document);
+        }
+      });
   },
 
-   // Search for a document by TITLE
+  // Search for a document by TITLE
   // return paginated document results
   documentSearch(req, res) {
     if (req.query.q) {
@@ -239,13 +239,13 @@ module.exports = {
         offset: req.query.offset,
         order: [['title', 'ASC']],
       })
-      .then((document) => {
-        if (!document || document.rows.length === 0) {
-          res.status(404).send({ message: 'Document not found!' });
-        } else {
-          res.status(200).send(document);
-        }
-      });
+        .then((document) => {
+          if (!document || document.rows.length === 0) {
+            res.status(404).send({ message: 'Document not found!' });
+          } else {
+            res.status(200).send(document);
+          }
+        });
     }
   },
 };
