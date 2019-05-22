@@ -120,16 +120,16 @@ module.exports = {
     });
   },
 
-  // Update the description an existing role
+  // Find a role by TITLE and Update the description
+  // Return success message if updated
   update(req, res) {
     Role.findOne({ where: { title: req.params.title } })
     .then((role) => {
       if (role) {
         role.updateAttributes({
-          title: req.params.title,
           description: req.body.description,
         }).then(() => {
-          if (!req.body.title || !req.body.description) {
+          if (!req.body.description) {
             res.send({ message: 'All fields required!' });
           } else {
             res.status(200).send({ message: 'Role updated!' });
@@ -151,7 +151,8 @@ module.exports = {
     }
   },
 
-  // Delete one role
+  // Fetch role by TITLE and delete
+  // Return success message on delete
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
       res.status(403).send({ message: 'That action is not allowed!' });

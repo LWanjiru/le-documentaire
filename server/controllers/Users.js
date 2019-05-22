@@ -281,15 +281,19 @@ module.exports = {
     }
   },
 
-  // Delete one user
+  // Delete one user using ID
+  // Admin cannot be deleted
+  // return message on success
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
-      res.status(403).send({ message: 'That action is not allowed!' });
+      res.status(403).send({ message: 'That action is not allowed! 1' });
     } else {
       User.findById(req.params.id)
         .then((user) => {
           if (!user || user.length < 1) {
             res.status(404).send({ message: 'User doesn\'t exist' });
+          } else if (user.title === 'admin') {
+            res.send({ message: 'This action is unauthorized!' });
           } else {
             User.destroy({
               where: { id: req.params.id },
@@ -321,27 +325,76 @@ module.exports = {
     }
   },
 
-  // Authorize admin
+  // Authorize admin privileges by ID
   admin(req, res, next) {
     const user = req.decoded;
     User.find({
       where: {
-        username: user.username,
+        id: user.id,
       },
     })
     .then((foundUser) => {
-      if (foundUser.title === 'admin') {
-        next();
+      if (foundUser) {
+        if (foundUser.title === 'admin') {
+          next();
+        } else {
+          res.status(403).send({ message: 'Access denied! You do not have the required permissions.' });
+        }
       } else {
-        res.send({ Message: 'You must be signed in as an admin to access this page!' });
+        res.send({ message: 'User not found!' });
       }
     });
   },
 
+  // Logout the user by blacklisting the current token
+  // user has to login again to access protected parts of the application
   logout(req, res) {
     // Get the token from either the body, query or token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     jwtBlacklist.blacklist(token);
-    res.status(302).redirect('/');
+    res.send({ message: 'Logged out successfully!' });
+  },
+
+  paginateUsers(req, res) {
+    if (req.query.limit || req.query.offset) {
+      User.findAndCountAll({
+        limit: req.query.limit,
+        offset: req.query.offset,
+        attributes: ['id', 'username', 'title', 'createdAt'],
+        order: [['id', 'ASC']],
+      })
+      .then((users) => {
+        res.send(users);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+    }
+  },
+
+  // Search for a with their username or email
+  // return user
+  userSearch(req, res) {
+    if (req.query.q) {
+      User.findAndCountAll({
+        where: {
+          $or: [
+            { username: { $like: `%${req.query.q}%` } },
+            { email: { $like: `%${req.query.q}%` } },
+          ],
+        },
+        limit: req.query.limit,
+        offset: req.query.offset,
+        attributes: ['username', 'email'],
+        order: [['username', 'ASC']],
+      })
+      .then((user) => {
+        if (!user || user.rows.length === 0) {
+          res.send({ message: 'User not found!' });
+        } else {
+          res.status(200).send(user);
+        }
+      });
+    }
   },
 };
