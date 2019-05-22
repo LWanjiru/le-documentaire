@@ -1,7 +1,6 @@
 const { Role } = require('../models');
 
 module.exports = {
-<<<<<<< HEAD
   // Check whether a role already exists and return message if it does
   // else create a new role with 'title' and 'description' attributes
   // Return created role and message on success.
@@ -30,27 +29,6 @@ module.exports = {
 
   // List all roles
   // Return message if empty or a list of existing roles
-=======
-  // Create a new role
-  create(req, res) {
-    Role.findOne({ where: { title: req.body.title.toLowerCase() } })
-    .then((role) => {
-      if (role) {
-        res.status(409).send({ message: 'Role already exists!' });
-      } else if (!req.body.title || !req.body.description) {
-        res.status(400).send({ message: 'All fields are required!' });
-      } else {
-        Role.create({
-          title: req.body.title.toLowerCase(),
-          description: req.body.description,
-        })
-        .then(newRole => res.status(201).send({ newRole, message: 'Role created successfully!' }));
-      }
-    });
-  },
-
-  // List all roles
->>>>>>> Modify controllers/Roles.js and refactor Role_spec.js for testing
   listAll(req, res) {
     Role.findAll()
     .then((role) => {
@@ -60,7 +38,6 @@ module.exports = {
         res.status(200).send(role);
       }
     });
-<<<<<<< HEAD
   },
 
   // Find a specified role by TITLE
@@ -129,8 +106,6 @@ module.exports = {
           }
         });
     }
-=======
->>>>>>> Modify controllers/Roles.js and refactor Role_spec.js for testing
   },
 
   // Find a specified role
