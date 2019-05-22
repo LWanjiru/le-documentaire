@@ -6,9 +6,9 @@ const db = require('./../../models');
 const User = db.User;
 
 describe('POST /users/', () => {
-  beforeEach((done) => {
-    request(app).delete('/api/roles').end(done);
-  });
+  // beforeEach((done) => {
+  //   request(app).delete('/api/roles').end(done);
+  // });
 
   it('responds with a 201 the created user on success', () => {
     request(app)
