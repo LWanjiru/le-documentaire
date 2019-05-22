@@ -25,6 +25,7 @@ module.exports = {
         Document.create({
           title: req.body.title,
           content: req.body.content,
+          access: req.body.access || 'private',
           owner,
           userId,
           userRole,
@@ -165,6 +166,8 @@ module.exports = {
       .then((document) => {
         if (!document) {
           res.send({ messsage: 'Document could not be found!' });
+        } else if (document.userId !== req.decoded.id) {
+          res.status(401).send({ message: 'You can only update documents you own!' });
         } else {
           document.updateAttributes({
             title: req.body.title || document.title,
@@ -194,7 +197,7 @@ module.exports = {
           });
           res.send({ message: 'Document deleted!' });
         } else {
-          res.send({ message: 'Cannot delete this document without owner\'s permission!' });
+          res.status(401).send({ message: 'Cannot delete this document without owner\'s permission!' });
         }
       });
   },
@@ -225,10 +228,12 @@ module.exports = {
   documentSearch(req, res) {
     if (req.query.q) {
       Document.findAndCountAll({
+        attributes: ['id', 'title', 'content', 'access', 'owner', 'userRole', 'createdAt', 'updatedAt'],
         where: {
           $or: [
-            { title: { $like: `%${req.query.q}%` } },
+            { title: { $iLike: `%${req.query.q}%` } },
           ],
+          access: 'public',
         },
         limit: req.query.limit,
         offset: req.query.offset,

@@ -21,7 +21,7 @@ module.exports = {
             title: req.body.title.toLowerCase(),
             description: req.body.description,
           })
-          .then((newRole => res.status(201).send({ newRole, message: 'Role created successfully!' })));
+          .then(() => res.status(201).send({ message: 'Role created successfully!' }));
         }
       });
     }
@@ -63,13 +63,13 @@ module.exports = {
           description: req.body.description,
         }).then(() => {
           if (!req.body.description) {
-            res.send({ message: 'All fields required!' });
+            res.status(400).send({ message: 'Please enter a description for the role!' });
           } else {
             res.status(200).send({ message: 'Role updated!' });
           }
         });
       } else {
-        res.send('Role doesn\'t exist!');
+        res.status(404).send({ message: 'Role doesn\'t exist!' });
       }
     });
   },
@@ -78,7 +78,8 @@ module.exports = {
   // Set only to work if the database in use is the 'test' database
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
-      Role.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204));
+      Role.truncate({ cascade: true, restartIdentity: true })
+      .then(() => res.sendStatus(204));
     } else {
       res.status(403).send({ message: 'That action is not allowed!' });
     }
@@ -93,7 +94,7 @@ module.exports = {
       Role.findById(req.params.title)
         .then((role) => {
           if (!role) {
-            res.send({ message: 'Role doesn\'t exist' });
+            res.status(404).send({ message: 'Role not found!' });
           } else if (req.params.title === 'admin' || req.params.title === 'regular') {
             res.status(403).send({ message: 'That action is not allowed!' });
           } else {
@@ -102,7 +103,7 @@ module.exports = {
               cascade: true,
               restartIdentity: true,
             });
-            res.send({ message: 'Role deleted successfully' });
+            res.send({ message: 'Role deleted successfully!' });
           }
         });
     }

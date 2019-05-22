@@ -1,4 +1,4 @@
-
+const passwordHash = require('password-hash');
 
 module.exports = {
   up(queryInterface) {
@@ -8,7 +8,7 @@ module.exports = {
         firstName: 'ray',
         lastName: 'ciru',
         email: 'admin@ledocumentaire.com',
-        password: 'administrator',
+        password: passwordHash.generate('administrator'),
         title: 'admin',
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
@@ -19,7 +19,7 @@ module.exports = {
         firstName: 'Bob',
         lastName: 'Dylan',
         email: 'bobby@example.com',
-        password: 'soledad123',
+        password: passwordHash.generate('soledad123'),
         title: 'regular',
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
