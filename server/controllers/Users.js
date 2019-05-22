@@ -281,7 +281,7 @@ module.exports = {
     }
   },
 
-  // Delete one role
+  // Delete one user
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
       res.status(403).send({ message: 'That action is not allowed!' });
@@ -300,5 +300,41 @@ module.exports = {
           }
         });
     }
+  },
+
+  // Verify user login using jwt token
+  authenticate(req, res, next) {
+    // Get the token from either the body, query or token
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (token) {
+      jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+          res.send({ message: 'Failed to authenticate token' });
+        } else {
+          // Store token information in a request object for use in other requests
+          req.decoded = decoded;
+          next();
+        }
+      });
+    } else {
+      res.status(403).send({ message: 'Token absent. Please login to get a token' });
+    }
+  },
+
+  // Authorize admin
+  admin(req, res, next) {
+    const user = req.decoded;
+    User.find({
+      where: {
+        username: user.username,
+      },
+    })
+    .then((foundUser) => {
+      if (foundUser.title === 'admin') {
+        next();
+      } else {
+        res.send('only admin can see this route!');
+      }
+    });
   },
 };
