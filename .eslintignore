@@ -1,8 +1,4 @@
 node_modules/
-<<<<<<< HEAD
 coverage/
 .vscode
 dist/
-=======
-coverage/
->>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing
