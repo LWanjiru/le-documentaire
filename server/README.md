@@ -1,13 +1,14 @@
-# Le Documentaire
+# Le Documentaire (the API)
+
+- Manage all your documents in one place, for the workspace.
 ---
-Manage all your documents in one place, for the workspace.
 
 ### Pivotal Tracker Stories
+
+- https://www.pivotaltracker.com/n/projects/2072191
 ---
-https://www.pivotaltracker.com/n/projects/2072191
 
 ### Setup Project
----
 
 - Clone this repository to your desktop using the command `$ git clone https://github.com/LWanjiru/le-documentaire.git`
 
@@ -17,18 +18,19 @@ https://www.pivotaltracker.com/n/projects/2072191
 
 - Ensure that you have [Postgresql](https://www.postgresql.org) installed and set up, and a client like [Postico](https://eggerapps.at/postico/) running to connect to your database.
 
-- We will also be using the promised based ORM [Sequelize](http://docs.sequelizejs.com) and the [Sequalize cli](http://docs.sequelizejs.com/manual/tutorial/migrations.html), which we already installed with the other `npm` packages.
+- We will also be using the promise-based ORM [Sequelize](http://docs.sequelizejs.com) and the [Sequalize cli](http://docs.sequelizejs.com/manual/tutorial/migrations.html), which we already installed with the other `npm` packages.
 
 - Once you have set up your `PostgreSQL` database; I've named mine `documentor-dev`.  (See server/config/config.json for database configurations). and change the `username` with your useraname and the `password` too, if you choose to have one.  
 
 - Run `$ sequelize db:migrate && sequelize db:seed:all` . This will create Role, User and Document tables in your database, alongside a SequelizeMeta table which contains details of the migration files. The second part will populate the `Role` and `user` tables with `admin` & `regular` roles, and a corresponding user for each role in the `User` table.
 
-- Create a file named `config.js` in the `server/config` folder and create your `secret` which will be used when signing your token for authentication. 
+- Create a file named `config.js` in the `server/config` folder and create your `secret` which will be used when signing your token for authentication. `NOTE`: This file should be added to `.gitignore` as it contains authentication information.
 
 - You will need [Postman](https://www.getpostman.com/postman) to view the endpoints and how they work, and also to be able to login with your token credentials and access the protected routes.
 
+- Now that you are done with the set up, use `$ nodemon`(if you have it installed globally) or run `$ npm run start-server` to start the server. 
 
-- Now that you are done with the set up, use `$ nodemon` to start the server and on `Postman` select `GET` and use the address `http://localhost:8000/` and you should see the following message:
+- Go to `Postman` select `GET` and use the address `http://localhost:8000/` and you should see the following message:
 
  ```
 {
@@ -42,7 +44,14 @@ https://www.pivotaltracker.com/n/projects/2072191
 NB: To use the login `token` provided. Add it as an `x-access-token` attributes in your header after each login as a different user. 
 
 ```
+---
 
+### Testing
+
+- Make sure that you have your databases for the different environments configured as per the guidance in the `Setup` section of this README document.
+
+- Run `$ npm test` to view the tests and the test coverage.
+---
 
 [![Build Status](https://travis-ci.org/LWanjiru/le-documentaire.svg?branch=master)](https://travis-ci.org/LWanjiru/le-documentaire)
 [![Code Climate](https://codeclimate.com/github/LWanjiru/le-documentaire/badges/gpa.svg)](https://codeclimate.com/github/LWanjiru/le-documentaire)
