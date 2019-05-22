@@ -8,6 +8,7 @@ require('../App');
 module.exports = (app) => {
   /**
    * ROLE routes
+   * All require ADMIN credentials to access
    */
   // Add a role
   app.post('/roles/add', UserController.authenticate, UserController.admin, RoleController.create);
@@ -36,18 +37,21 @@ module.exports = (app) => {
   app.post('/users/logout', UserController.authenticate, UserController.logout);
 
   // Paginate and List all users
-  app.route('/users')
+  app.route('/users/')
   .get(UserController.authenticate, UserController.paginateUsers)
-   // Delete ALL users
+
+   // Delete ALL users(Admin)
   .delete(UserController.authenticate, UserController.admin, UserController.deleteAll);
 
     // List All users without pagination
   app.get('/users/all', UserController.authenticate, UserController.listAll);
 
-  // List, Update, Delete one user by ID
+  // List, Update one user by ID
   app.route('/users/:id')
   .get(UserController.authenticate, UserController.listOne)
   .put(UserController.authenticate, UserController.update)
+
+  // Delete a user (Admin)
   .delete(UserController.authenticate, UserController.admin, UserController.deleteOne);
 
 
@@ -64,7 +68,7 @@ module.exports = (app) => {
   app.get('/documents/all', UserController.authenticate, UserController.admin, DocumentController.listAll);
 
   // View All Public documents
-  app.get('/documents/public', DocumentController.listPublic);
+  app.get('/', DocumentController.listPublic);
 
   // View all of a user's documents
   app.get('/users/:id/documents', UserController.authenticate, DocumentController.listUserDocs);
