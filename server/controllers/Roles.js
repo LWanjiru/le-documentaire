@@ -120,13 +120,13 @@ module.exports = {
     });
   },
 
-  // Update and make changes to an existing role
+  // Update the description an existing role
   update(req, res) {
     Role.findOne({ where: { title: req.params.title } })
     .then((role) => {
       if (role) {
         role.updateAttributes({
-          title: req.body.title.toLowerCase(),
+          title: req.params.title,
           description: req.body.description,
         }).then(() => {
           if (!req.body.title || !req.body.description) {
@@ -160,13 +160,15 @@ module.exports = {
         .then((role) => {
           if (!role) {
             res.send({ message: 'Role doesn\'t exist' });
+          } else if (req.params.title === 'admin' || req.params.title === 'regular') {
+            res.status(403).send({ message: 'That action is not allowed!' });
           } else {
             Role.destroy({
               where: { title: req.params.title },
               cascade: true,
               restartIdentity: true,
             });
-            res.send({ message: 'Role deleted!' });
+            res.send({ message: 'Role deleted successfully' });
           }
         });
     }

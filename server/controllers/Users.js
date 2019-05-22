@@ -289,7 +289,7 @@ module.exports = {
       User.findById(req.params.id)
         .then((user) => {
           if (!user) {
-            res.send({ message: 'User doesn\'t exist' });
+            res.status(404).send({ message: 'User doesn\'t exist' });
           } else {
             User.destroy({
               where: { id: req.params.id },
@@ -309,7 +309,7 @@ module.exports = {
     if (token) {
       jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
-          res.send({ message: 'Failed to authenticate token' });
+          res.send({ message: 'Failed to authenticate token. Please login in to verify account' });
         } else {
           // Store token information in a request object for use in other requests
           req.decoded = decoded;
@@ -317,7 +317,7 @@ module.exports = {
         }
       });
     } else {
-      res.status(403).send({ message: 'Token absent. Please login to get a token' });
+      res.status(403).send({ message: 'You must be logged in to view the page you requested' });
     }
   },
 
@@ -333,8 +333,15 @@ module.exports = {
       if (foundUser.title === 'admin') {
         next();
       } else {
-        res.send('only admin can see this route!');
+        res.send({ Message: 'You must be signed in as an admin to access this page!' });
       }
     });
+  },
+
+  logout(req, res) {
+    // Get the token from either the body, query or token
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    jwtBlacklist.blacklist(token);
+    res.status(302).redirect('/');
   },
 };
