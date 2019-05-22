@@ -13,7 +13,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Require routes into the application
+<<<<<<< HEAD:server/App.js
 require('./routes/Route')(app);
+=======
+require('./server/routes/Route')(app);
+>>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing:app.js
 
 // A catch-all route for anything the webservice does not define.
 app.get('*', (req, res) => res.status(404).send({

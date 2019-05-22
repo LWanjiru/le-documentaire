@@ -84,6 +84,7 @@ module.exports = {
     }
   },
 
+<<<<<<< HEAD
   // Fetch role by TITLE and delete
   // Return success message on delete
   deleteOne(req, res) {
@@ -106,6 +107,12 @@ module.exports = {
           }
         });
     }
+=======
+  list(req, res) {
+    Role.findAll()
+    .then(role => res.status(200).send(role))
+    .catch(error => res.status(400).send(error));
+>>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing
   },
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
