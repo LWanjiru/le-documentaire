@@ -47,6 +47,7 @@ describe('Role', () => {
   });
 
   it('DELETE /roles/:title should return message if delete successful', (done) => {
+    process.env.NODE_ENV = 'test';
     Request(app)
     .delete('/roles/testrole')
     .set('x-access-token', token)
@@ -211,6 +212,7 @@ describe('Role', () => {
         lastName: 'Jones',
         email: 'bubbles@example.com',
         password: '11112222',
+        title: 'admin',
       })
       .end((err, res) => {
         expect(res.statusCode).to.equal(500);

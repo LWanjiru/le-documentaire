@@ -171,7 +171,7 @@ module.exports = {
     if (process.env.NODE_ENV === 'test') {
       User.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204).send({}));
     } else {
-      res.status(403).send({ message: 'That action is not allowed!' });
+      res.status(401).send({ message: 'You do not have the required permissions.' });
     }
   },
 
@@ -180,14 +180,14 @@ module.exports = {
   // return message on success
   deleteOne(req, res) {
     if (process.env.NODE_ENV === 'production') {
-      res.status(403).send({ message: 'That action is not allowed! 1' });
+      res.status(403).send({ message: 'That action is not allowed!' });
     } else {
       User.findById(req.params.id)
         .then((user) => {
           if (!user || user.length < 1) {
             res.status(404).send({ message: 'User doesn\'t exist' });
           } else if (user.title === 'admin') {
-            res.status(403).send({ message: 'This action is unauthorized!' });
+            res.status(403).send({ message: 'Permission denied!' });
           } else {
             User.destroy({
               where: { id: req.params.id },
@@ -250,20 +250,18 @@ module.exports = {
   },
 
   paginateUsers(req, res) {
-    if (req.query.limit || req.query.offset) {
-      User.findAndCountAll({
-        limit: req.query.limit,
-        offset: req.query.offset,
-        attributes: ['id', 'username', 'title', 'createdAt'],
-        order: [['id', 'ASC']],
-      })
-      .then((users) => {
-        res.status(200).send(users);
-      })
-      .catch((err) => {
-        res.status(400).send(err);
-      });
-    }
+    User.findAndCountAll({
+      limit: req.query.limit,
+      offset: req.query.offset,
+      attributes: ['id', 'username', 'title', 'createdAt'],
+      order: [['id', 'ASC']],
+    })
+    .then((users) => {
+      res.status(200).send(users);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
   },
 
   // Search for a with their username or email

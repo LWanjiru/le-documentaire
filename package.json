@@ -10,8 +10,8 @@
     "build": "webpack -p",
     "lint": "./node_modules/.bin/eslint client/  server/",
     "lint:watch": "watch 'npm run lint' ",
-    "coverage":"open coverage/lcov-report/*.html",
-    "server-test-path":"NODE_ENV=test istanbul cover _mocha -R test/server/User.Spec.js test/server/Role.Spec.js",
+    "coverage": "open coverage/lcov-report/*.html",
+    "server-test-path": "NODE_ENV=test istanbul cover _mocha -R test/server/Document.Spec.js test/server/User.Spec.js test/server/Role.Spec.js",
     "test:dev": "sequelize db:seed:all --env=test && npm run server-test-path && npm run coverage",
     "test": "sequelize db:seed:all --env=test && npm run server-test-path ",
     "test:watch": "watch 'npm run test' "
@@ -70,6 +70,7 @@
     "morgan": "^1.8.2",
     "node-sass": "^4.5.3",
     "password-hash": "^1.2.2",
+    "path": "^0.12.7",
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
     "protractor": "^5.1.2",
