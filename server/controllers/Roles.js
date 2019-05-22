@@ -110,47 +110,42 @@ module.exports = {
 
   // Find a specified role
   listOne(req, res) {
-    Role.findById(req.params.title)
+    Role.findOne({ where: { title: req.params.title } })
     .then((role) => {
       if (!role) {
         res.status(404).send({ message: 'Role not found!' });
       } else {
-        res.status(200).res.send(role);
+        res.status(200).send(role);
       }
     });
   },
 
   // Update and make changes to an existing role
   update(req, res) {
-    if (!req.body.title || !req.body.description) {
-      res.status(400).send({ message: 'All fields are required!' });
-    } else {
-      Role.find({
-        where: {
+    Role.findOne({ where: { title: req.params.title } })
+    .then((role) => {
+      if (role) {
+        role.updateAttributes({
           title: req.body.title.toLowerCase(),
-        },
-      })
-      .then((role) => {
-        if (role) {
-          role.updateAttributes({
-            title: req.body.title.toLowerCase(),
-            description: req.body.description,
-          }).then(() => {
-            res.status(200).send({ message: 'Role updated!'});
-          });
-        } else {
-          res.status(404)
-          .send({ message: 'Role does not exist!' });
-        }
-      });
-    }
+          description: req.body.description,
+        }).then(() => {
+          if (!req.body.title || !req.body.description) {
+            res.send({ message: 'All fields required!' });
+          } else {
+            res.status(200).send({ message: 'Role updated!' });
+          }
+        });
+      } else {
+        res.send('Role doesn\'t exist!');
+      }
+    });
   },
 
   // Delete all the roles from the Role table
   // Set only to work if the database in use is the 'test' database
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
-      Role.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204).send({}));
+      Role.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204));
     } else {
       res.status(403).send({ message: 'That action is not allowed!' });
     }

@@ -272,11 +272,33 @@ module.exports = {
       });
     }
   },
+
   deleteAll(req, res) {
     if (process.env.NODE_ENV === 'test') {
       User.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204).send({}));
     } else {
       res.status(403).send({ message: 'That action is not allowed!' });
+    }
+  },
+
+  // Delete one role
+  deleteOne(req, res) {
+    if (process.env.NODE_ENV === 'production') {
+      res.status(403).send({ message: 'That action is not allowed!' });
+    } else {
+      User.findById(req.params.id)
+        .then((user) => {
+          if (!user) {
+            res.send({ message: 'User doesn\'t exist' });
+          } else {
+            User.destroy({
+              where: { id: req.params.id },
+              cascade: true,
+              restartIdentity: true,
+            });
+            res.send({ message: 'User deleted!' });
+          }
+        });
     }
   },
 };
