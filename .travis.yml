@@ -1,16 +1,18 @@
 language: node_js
 node_js:
 <<<<<<< HEAD
+<<<<<<< HEAD
   - "6"
 =======
   - "8"
   - "7"
+=======
+>>>>>>> [feature #148963113] modify .travis.yml and package.json
   - "6"
   
 >>>>>>> [feature #148963113] remove cached coverage folder, add tests, controller methods and routes, fix travis for testing
 script:
  - npm test
- - npm run coverage
 
 <<<<<<< HEAD
 =======
