@@ -33,7 +33,7 @@ module.exports = {
     Role.findAll()
     .then((role) => {
       if (role.length === 0) {
-        res.status(200).send({ message: 'Nothing to show.' });
+        res.status(204).send({ message: 'Nothing to show.' });
       } else {
         res.status(200).send(role);
       }

@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       required: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       validate: {
         len: {
@@ -32,11 +33,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
 >>>>>>> [feature #148963113] configure Users.js,create end points and tests
+=======
+>>>>>>> [feature #148963113]refine roles controllers and validation. Append user create method and model for validation
     },
     email: {
       type: DataTypes.STRING,
       unique: true,
       required: true,
+<<<<<<< HEAD
 <<<<<<< HEAD
     },
     title: {
@@ -52,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
 >>>>>>> [feature #148963113] configure Users.js,create end points and tests
+=======
+>>>>>>> [feature #148963113]refine roles controllers and validation. Append user create method and model for validation
     },
   }, {
     freezeTableName: true,
