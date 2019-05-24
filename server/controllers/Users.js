@@ -1,8 +1,8 @@
-const { Role, User } = require('../models');
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
 const jwtBlacklist = require('jwt-blacklist')(jwt);
 const config = require('../config/config');
+const { Role, User } = require('../models');
 
 module.exports = {
   // Login a user with 'username' and 'password'
@@ -27,7 +27,12 @@ module.exports = {
             const hashPassword = user.password;
             const passwordValue = passwordHash.verify(req.body.password, hashPassword);
             if (req.body.password !=='' && passwordValue) {
-              const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
+              const token = jwtBlacklist.sign({
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                title: user.title
+              }, config.secret, { expiresIn: '1h' });
               const loginDetails = {
                 id: user.id,
                 username: user.username,
@@ -36,7 +41,6 @@ module.exports = {
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
               };
-  
               res.send({
                 loginDetails,
                 message: 'Log in successful!',
@@ -51,7 +55,7 @@ module.exports = {
             res.status(400).send({ message: 'username/password fields cannot be empty.' });
           } else {
             res.status(404).send({ message: 'This user does not exist.' });
-          } 
+          }
         })
       }
     });
@@ -78,8 +82,9 @@ module.exports = {
               if (user) {
                 res.status(409).send({ message: 'This username is already in use! Please create a unique one.' });
               } else if (
-                !req.body.username || !req.body.firstName ||
-              !req.body.lastName || !req.body.password || !req.body.email) {
+                !req.body.username || !req.body.firstName
+                || !req.body.lastName || !req.body.password
+                || !req.body.email) {
                 res.status(400).send({ message: 'All fields are required!' });
               } else if (user === null) {
                 User.findOne({
@@ -258,7 +263,7 @@ module.exports = {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
       jwtBlacklist.blacklist(token);
-      res.status(205).send({message: "Successfully logged out!"}).end();
+      res.status(205).send({ message: "Successfully logged out!" }).end();
     }
   },
 
@@ -298,8 +303,8 @@ module.exports = {
       .then((users) => {
         res.status(200).send(users);
       })
-      .catch((err) => {
-        res.status(400).send({message: 'Please use numerical values Only!'});
+      .catch(() => {
+        res.status(400).send({ message: 'Please use numerical values Only!' });
       });
   },
 };

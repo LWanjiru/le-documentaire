@@ -19,10 +19,10 @@ if (config.environment === 'production') {
     dialect: 'postgres',
     dialectOption: {
     ssl: true,
-    native: true
+    native: true,
     },
-    logging: true
-    }
+    logging: true,
+    },
     );
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);

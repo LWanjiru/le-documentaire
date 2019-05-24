@@ -1,6 +1,6 @@
-const app = require('../../server/App');
 const Request = require('supertest');
 const chai = require('chai');
+const app = require('../../server/App');
 
 const expect = chai.expect;
 

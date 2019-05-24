@@ -1,7 +1,6 @@
 const { Role } = require('../models');
 
-function isNullNumberOrWhitespace( input ) {
-  console.log(Number(parseFloat(input)));
+function isNullNumberOrWhitespace(input) {
   return !input || !input.trim() || typeof input !== 'string' || Number(parseFloat(input));
 }
 
@@ -114,4 +113,3 @@ module.exports = {
     }
   },
 };
-

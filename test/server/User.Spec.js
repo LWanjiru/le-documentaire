@@ -1,6 +1,6 @@
-const app = require('../../server/App');
 const Request = require('supertest');
 const chai = require('chai');
+const app = require('../../server/App');
 
 const expect = chai.expect;
 
@@ -299,7 +299,6 @@ describe('User (regular)', () => {
       .delete('/users')
       .set('x-access-token', token)
       .end((err, res) => {
-        console.log(res.statusCode);
         expect(res.statusCode).to.equal(403);
         expect(res.body.message).to.equal('You do not have the required permissions.');
         done();
@@ -407,7 +406,7 @@ describe('User (admin)', () => {
         expect(res.body.message).to.equal('That action is not allowed!');
         done();
       });
-  });  
+  });
 });
 
 describe('User (Deletion)', () => {
@@ -437,6 +436,4 @@ describe('User (Deletion)', () => {
         done();
       });
   });
-
-  
 });

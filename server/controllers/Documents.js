@@ -136,8 +136,8 @@ module.exports = {
   //  Fetch a Document by ID and update  title and description fields
   // Return message on successful update
   update(req, res) {
-    if (!req.body.title || req.body.title === '' ||
-        !req.body.content || req.body.content === '') {
+    if (!req.body.title || req.body.title === ''
+    || !req.body.content || req.body.content === '') {
       res.send({ message: 'Both fields are required' });
     } else {
       Document.findOne({ where: { id: req.params.id } })

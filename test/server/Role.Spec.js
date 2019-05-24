@@ -1,6 +1,6 @@
 const chai = require('chai');
-const app = require('../../server/App');
 const Request = require('supertest');
+const app = require('../../server/App');
 
 const expect = chai.expect;
 
@@ -16,19 +16,17 @@ describe('Role', () => {
     })
     .end((err, res) => {
       token = res.body.token;
-      
       done();
     });
   });
 
-  
   it('POST /roles/add should return a 201 on ADMIN create role success', (done) => {
     Request(app)
     .post('/roles/add')
     .set('x-access-token', token)
     .send({
       title: 'TestRole',
-      description: 'They are tested as new creations.'
+      description: 'They are tested as new creations.',
     })
     .end((err, res) => {
       expect(res.statusCode).to.equal(201);
@@ -48,7 +46,6 @@ describe('Role', () => {
       done();
     });
   });
- 
 
   it('DELETE /roles/:title should return message if delete successful', (done) => {
     process.env.NODE_ENV = 'test';
@@ -121,7 +118,7 @@ describe('Role', () => {
     Request(app)
     .put('/roles/regular')
     .set('x-access-token', token)
-    .send({ description: ''})
+    .send({ description: '' })
     .end((err, res) => {
       expect(res.statusCode).to.equal(400);
       expect(res.body.message).to.equal('Please enter a description for the role!');
@@ -185,12 +182,10 @@ describe('Role', () => {
       done();
     });
   });
-  
 });
 
 describe('Role (Deletion)', () => {
   let token;
-
   before(() => {
     Request(app)
       .post('/users/login')
@@ -228,6 +223,4 @@ describe('Role (Deletion)', () => {
         done();
       });
   });
-
 });
-
