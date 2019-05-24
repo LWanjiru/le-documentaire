@@ -7,18 +7,15 @@ const expect = chai.expect;
 describe('User (regular)', () => {
   let token;
 
-  before((done) => {
-    Request(app)
+  Request(app)
     .post('/users/login')
     .set('Accept', 'application/x-www-form-urlencoded')
     .send({
       username: 'musketeer',
       password: 'soledad123',
     })
-    .end((err, res) => {
-      token = res.body.token;
-      done();
-    });
+  .end((err, res) => {
+    token = res.body.token;
   });
 
   it('POST /users responds with 201 on user create success', (done) => {
@@ -26,9 +23,9 @@ describe('User (regular)', () => {
       .post('/users/')
       .send({
         username: 'maryJ',
-        firstName: 'Mary',
-        lastName: 'Jones',
-        email: 'mary@example.com',
+        firstName: 'Maria',
+        lastName: 'poussey',
+        email: 'poussey@example.com',
         password: '11112222',
       })
       .end((err, res) => {
@@ -80,7 +77,7 @@ describe('User (regular)', () => {
         username: 'billy',
         firstName: 'billz',
         lastName: 'Blazer',
-        email: 'mary@example.com',
+        email: 'poussey@example.com',
         password: 'cartwheels2',
       })
       .end((err, res) => {
@@ -133,7 +130,8 @@ describe('User (regular)', () => {
       password: '5554445',
     })
     .end((err, res) => {
-      expect(res.body.message).to.equal('password does not match the username');
+      expect(res.statusCode).to.equal(400);
+      expect(res.body.message).to.equal('Wrong username/password.');
       done();
     });
   });
@@ -147,7 +145,7 @@ describe('User (regular)', () => {
       password: '11112222',
     })
     .end((err, res) => {
-      expect(res.body.message).to.equal('username/password fields cannot be empty');
+      expect(res.body.message).to.equal('username/password fields cannot be empty.');
       done();
     });
   });
@@ -161,7 +159,7 @@ describe('User (regular)', () => {
       password: '5554445',
     })
     .end((err, res) => {
-      expect(res.body.message).to.equal('This user account does not exist. Create one');
+      expect(res.body.message).to.equal('This user does not exist.');
       done();
     });
   });
@@ -295,13 +293,14 @@ describe('User (regular)', () => {
         done();
       });
   });
-  it('DELETE /users responds with 401 if user not admin and ENV NOT test', (done) => {
+  it('DELETE /users responds with 403 if user not admin and ENV NOT test', (done) => {
     process.env.NODE_ENV = 'development';
     Request(app)
       .delete('/users')
       .set('x-access-token', token)
       .end((err, res) => {
-        expect(res.statusCode).to.equal(401);
+        console.log(res.statusCode);
+        expect(res.statusCode).to.equal(403);
         expect(res.body.message).to.equal('You do not have the required permissions.');
         done();
       });
@@ -374,17 +373,6 @@ describe('User (admin)', () => {
       });
   });
 
-  xit('DELETE /users responds with 204 if user admin and ENV test', (done) => {
-    process.env.NODE_ENV = 'test';
-    Request(app)
-      .delete('/users')
-      .set('x-access-token', token)
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(204);
-        done();
-      });
-  });
-
   it('DELETE /users/:id responds with 404 if user DOES NOT exist', (done) => {
     process.env.NODE_ENV = 'test';
     Request(app)
@@ -396,6 +384,7 @@ describe('User (admin)', () => {
         done();
       });
   });
+
   it('DELETE /users/:id responds with 403 if user is admin', (done) => {
     process.env.NODE_ENV = 'test';
     Request(app)
@@ -407,6 +396,7 @@ describe('User (admin)', () => {
         done();
       });
   });
+
   it('DELETE /users/:id responds with 403 if ENV production', (done) => {
     process.env.NODE_ENV = 'production';
     Request(app)
@@ -417,6 +407,24 @@ describe('User (admin)', () => {
         expect(res.body.message).to.equal('That action is not allowed!');
         done();
       });
+  });  
+});
+
+describe('User (Deletion)', () => {
+  let token;
+
+  beforeEach((done) => {
+    Request(app)
+    .post('/users/login')
+    .set('Accept', 'application/x-www-form-urlencoded')
+    .send({
+      username: 'admin',
+      password: 'administrator',
+    })
+    .end((err, res) => {
+      token = res.body.token;
+      done();
+    });
   });
 
   it('DELETE /users/:id responds with message if deleted successfully', (done) => {
@@ -425,9 +433,10 @@ describe('User (admin)', () => {
       .delete('/users/3')
       .set('x-access-token', token)
       .end((err, res) => {
-        // expect(res.statusCode).to.equal();
         expect(res.body.message).to.equal('User deleted!');
         done();
       });
   });
+
+  
 });

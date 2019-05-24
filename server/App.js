@@ -19,5 +19,8 @@ require('./routes/Routes')(app);
 app.get('*', (req, res) => res.status(404).send({
   message: 'Oops! Nothing to see here.',
 }));
+app.post('*', (req, res) => res.status(404).send({
+  message: 'Oops! Nothing to see here.',
+}));
 
 module.exports = app;

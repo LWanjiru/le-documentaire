@@ -37,18 +37,6 @@ module.exports = {
       });
   },
 
-  // List all documents in the document table without any constraints
-  listAll(req, res) {
-    Document.findAll()
-      .then((document) => {
-        if (document.length === 0) {
-          res.status(200).send({ message: 'No documents created yet. Create one' });
-        } else {
-          res.status(200).send(document);
-        }
-      });
-  },
-
   // List all public documents
   // Fetch by access, and only return documents whose access is set to PUBLIC
   // If list is empty return message
@@ -124,21 +112,11 @@ module.exports = {
       offset: req.query.offset,
       order: [['id', 'ASC']],
     })
-    .then((user) => {
-      if (!req.body.title) {
-        res.send({ message: 'Please enter a title for your document.' });
-      } else if (!req.body.content || req.body.content === '') {
-        res.send({ message: 'Document body cannot be empty.' });
+    .then((document) => {
+      if (document.rows.length === 0) {
+        res.send({ message: 'There are no documents from other users in this role yet.' });
       } else {
-        const userId = user.id;
-        Document.create({
-          title: req.body.title,
-          content: req.body.content,
-          userId,
-        })
-        .then((document) => {
-          res.send(document);
-        });
+        res.send(document);
       }
     });
   },
@@ -147,10 +125,10 @@ module.exports = {
   listAll(req, res) {
     Document.findAll()
     .then((document) => {
-      if (document.rows.length === 0) {
-        res.send({ message: 'There are no documents from other users in this role yet.' });
+      if (document.length === 0) {
+        res.status(200).send({ message: 'There are no documents from other users in this role yet.' });
       } else {
-        res.send(document);
+        res.status(200).send(document);
       }
     });
   },
@@ -184,7 +162,6 @@ module.exports = {
   // as the admin or document owner
   deleteOne(req, res) {
     const user = req.decoded;
-
     Document.findById(req.params.id)
       .then((document) => {
         if (!document || document.length < 1) {

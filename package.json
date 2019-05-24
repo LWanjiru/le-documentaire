@@ -5,7 +5,7 @@
   "main": "./bin/www",
   "scripts": {
     "start": "npm-run-all -l -p lint:watch start-server start-client build",
-    "start:clean":"sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all && nodemon",
+    "start:clean": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all && nodemon",
     "start-server": "nodemon",
     "start-client": "npm run build && webpack-dev-server --hot --color",
     "build": "webpack -p",
@@ -13,8 +13,8 @@
     "lint:watch": "watch 'npm run lint' ",
     "coverage": "open coverage/lcov-report/*.html",
     "server-test-path": "NODE_ENV=test istanbul cover _mocha -R test/server/Document.Spec.js test/server/User.Spec.js test/server/Role.Spec.js",
-    "test:dev": "sequelize db:migrate:undo:all --env=test && sequelize db:migrate --env=test && sequelize db:seed:all --env=test && npm run server-test-path && npm run coverage && rm -rf npm-debug.*",
-    "test": "npm run test:dev",
+    "test:server": "sequelize db:migrate:undo:all --env=test && sequelize db:migrate --env=test && sequelize db:seed:all --env=test && npm run server-test-path && npm run coverage && rm -rf npm-debug.*",
+    "test": "npm run test:server",
     "test:watch": "watch 'npm run test' "
   },
   "repository": {

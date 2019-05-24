@@ -5,10 +5,8 @@ const Request = require('supertest');
 const expect = chai.expect;
 
 describe('Role', () => {
-  describe('/users/', () => {});
   let token;
-
-  before((done) => {
+  beforeEach((done) => {
     Request(app)
     .post('/users/login')
     .set('Accept', 'application/x-www-form-urlencoded')
@@ -18,15 +16,20 @@ describe('Role', () => {
     })
     .end((err, res) => {
       token = res.body.token;
+      
       done();
     });
   });
 
-  it('POST /roles/add should return a 201 on create role success', (done) => {
+  
+  it('POST /roles/add should return a 201 on ADMIN create role success', (done) => {
     Request(app)
     .post('/roles/add')
     .set('x-access-token', token)
-    .send({ title: 'TestRole', description: 'They are tested as new creations.' })
+    .send({
+      title: 'TestRole',
+      description: 'They are tested as new creations.'
+    })
     .end((err, res) => {
       expect(res.statusCode).to.equal(201);
       expect(res.body.message).to.equal('Role created successfully!');
@@ -34,7 +37,7 @@ describe('Role', () => {
     });
   });
 
-  it('POST /roles/add should return a 409 on create role if it already exists(FAIL)', (done) => {
+  it('POST /roles/add should return a 409 on ADMIN create role if it already exists(FAIL)', (done) => {
     Request(app)
     .post('/roles/add')
     .set('x-access-token', token)
@@ -45,6 +48,7 @@ describe('Role', () => {
       done();
     });
   });
+ 
 
   it('DELETE /roles/:title should return message if delete successful', (done) => {
     process.env.NODE_ENV = 'test';
@@ -64,7 +68,7 @@ describe('Role', () => {
     .send({ title: '', description: '' })
     .end((err, res) => {
       expect(res.statusCode).to.equal(400);
-      expect(res.body.message).to.equal('All fields are required!');
+      expect(res.body.message).to.equal('Fields can not be empty or begin with a number');
       done();
     });
   });
@@ -117,22 +121,10 @@ describe('Role', () => {
     Request(app)
     .put('/roles/regular')
     .set('x-access-token', token)
-    .send({ description: '' })
+    .send({ description: ''})
     .end((err, res) => {
       expect(res.statusCode).to.equal(400);
       expect(res.body.message).to.equal('Please enter a description for the role!');
-      done();
-    });
-  });
-
-  it('PUT /roles/:title should return a 404 if the role title NOT found', (done) => {
-    Request(app)
-    .put('/roles/researcher')
-    .set('x-access-token', token)
-    .send({ description: 'This role has not been created.' })
-    .end((err, res) => {
-      expect(res.statusCode).to.equal(404);
-      expect(res.body.message).to.equal('Role doesn\'t exist!');
       done();
     });
   });
@@ -193,16 +185,30 @@ describe('Role', () => {
       done();
     });
   });
+  
+});
 
-  it('GET /roles should return a 200 response and message if no roles exist in table', (done) => {
+describe('Role (Deletion)', () => {
+  let token;
+
+  before(() => {
     Request(app)
-    .get('/roles')
-    .set('x-access-token', token)
-    .end((err, res) => {
-      expect(res.statusCode).to.equal(200);
-      expect(res.body.message).to.equal('Nothing to show.');
-      done();
-    });
+      .post('/users/login')
+      .set('Accept', 'application/x-www-form-urlencoded')
+      .send({
+        username: 'admin',
+        password: 'administrator',
+      })
+      .then((res) => {
+        token = res.body.token;
+        process.env.NODE_ENV = 'test';
+        Request(app)
+          .delete('/roles')
+          .set('x-access-token', token)
+          .end(() => {
+            // done();
+          });
+      });
   });
 
   it('POST /users responds with 500 on user create user if role DOES NOT exist', (done) => {
@@ -222,5 +228,6 @@ describe('Role', () => {
         done();
       });
   });
+
 });
 

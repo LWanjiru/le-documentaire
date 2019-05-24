@@ -212,7 +212,7 @@ describe('Document', () => {
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
-        expect(res.body.message).of.equal('There are no documents from other users in this role yet.');
+        expect(res.body.message).to.equal('There are no documents from other users in this role yet.');
         done();
       });
   });
@@ -301,9 +301,9 @@ describe('Documents (admin', () => {
       });
   });
 
-  it('GET /users/:id/documents should return a 200 response on success getting user\'s document success', (done) => {
+  it('GET /documents/all should return a 200 response on success if admin is logged in', (done) => {
     Request(app)
-      .get('/users/2/documents')
+      .get('/documents/all')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
@@ -311,9 +311,9 @@ describe('Documents (admin', () => {
       });
   });
 
-  it('GET /documents/all should return a 200 response on success if admin is logged in', (done) => {
+  it('GET /users/:id/documents should return a 200 response on success getting user\'s document success', (done) => {
     Request(app)
-      .get('/documents/all')
+      .get('/users/2/documents')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);

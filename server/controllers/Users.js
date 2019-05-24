@@ -15,35 +15,46 @@ module.exports = {
         title: 'regular',
       },
     })
-      .then((user) => {
-        if (user) {
-          const hashPassword = user.password;
-          const passwordValue = passwordHash.verify(req.body.password, hashPassword);
-          if (passwordValue) {
-            const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
-            const loginDetails = {
-              id: user.id,
-              username: user.username,
-              email: user.email,
-              title: user.title,
-              createdAt: user.createdAt,
-              updatedAt: user.updatedAt,
-            };
-
-            res.send({
-              loginDetails,
-              message: 'Log in successful!',
-              token,
-            });
+    .then((role) => {
+      if (role) {
+        User.findOne({
+          where: {
+            username: req.body.username,
+          },
+        })
+        .then((user) => {
+          if (user) {
+            const hashPassword = user.password;
+            const passwordValue = passwordHash.verify(req.body.password, hashPassword);
+            if (req.body.password !=='' && passwordValue) {
+              const token = jwtBlacklist.sign({ id: user.id, username: user.username, email: user.email, title: user.title }, config.secret, { expiresIn: '1h' });
+              const loginDetails = {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                title: user.title,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+              };
+  
+              res.send({
+                loginDetails,
+                message: 'Log in successful!',
+                token,
+              });
+            } else if(req.body.password === '') {
+              res.status(400).send({ message: 'password field cannot be empty.' });
+            } else {
+              res.status(400).send({ message: 'Wrong username/password.' });
+            }
+          } else if (!req.body.username || !req.body.password || req.body.username === '' || req.body.password === '') {
+            res.status(400).send({ message: 'username/password fields cannot be empty.' });
           } else {
-            res.send({ message: 'password does not match the username' });
-          }
-        } else if (!req.body.username || !req.body.password || req.body.username === '' || req.body.password === '') {
-          res.send({ message: 'username/password fields cannot be empty' });
-        } else {
-          res.send({ message: 'This user account does not exist. Create one' });
-        }
-      });
+            res.status(404).send({ message: 'This user does not exist.' });
+          } 
+        })
+      }
+    });
   },
 
   // Check whether the default role exists, if not, send message to alert admin
@@ -232,7 +243,7 @@ module.exports = {
           if (foundUser.title === 'admin') {
             next();
           } else {
-            res.status(401).send({ message: 'You do not have the required permissions.' });
+            res.status(403).send({ message: 'You do not have the required permissions.' });
           }
         } else {
           res.status(404).send({ message: 'User not found!' });
@@ -247,23 +258,8 @@ module.exports = {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
       jwtBlacklist.blacklist(token);
-      res.status(205);
+      res.status(205).send({message: "Successfully logged out!"}).end();
     }
-  },
-
-  paginateUsers(req, res) {
-    User.findAndCountAll({
-      limit: req.query.limit,
-      offset: req.query.offset,
-      attributes: ['id', 'username', 'title', 'createdAt'],
-      order: [['id', 'ASC']],
-    })
-      .then((users) => {
-        res.status(200).send(users);
-      })
-      .catch((err) => {
-        res.status(400).send(err);
-      });
   },
 
   // Search for a with their username or email
@@ -292,90 +288,7 @@ module.exports = {
     }
   },
 
-  deleteAll(req, res) {
-    if (process.env.NODE_ENV === 'test') {
-      User.truncate({ cascade: true, restartIdentity: true }).then(() => res.status(204).send({}));
-    } else {
-      res.status(403).send({ message: 'That action is not allowed!' });
-    }
-  },
-
-  // Delete one user using ID
-  // Admin cannot be deleted
-  // return message on success
-  deleteOne(req, res) {
-    if (process.env.NODE_ENV === 'production') {
-      res.status(403).send({ message: 'That action is not allowed! 1' });
-    } else {
-      User.findById(req.params.id)
-        .then((user) => {
-          if (!user || user.length < 1) {
-            res.status(404).send({ message: 'User doesn\'t exist' });
-          } else if (user.title === 'admin') {
-            res.send({ message: 'This action is unauthorized!' });
-          } else {
-            User.destroy({
-              where: { id: req.params.id },
-              cascade: true,
-              restartIdentity: true,
-            });
-            res.send({ message: 'User deleted!' });
-          }
-        });
-    }
-  },
-
-  // Verify user login using jwt token
-  authenticate(req, res, next) {
-    // Get the token from either the body, query or token
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (token) {
-      jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-          res.send({ message: 'Failed to authenticate token. Please login in to verify account' });
-        } else {
-          // Store token information in a request object for use in other requests
-          req.decoded = decoded;
-          next();
-        }
-      });
-    } else {
-      res.status(403).send({ message: 'You must be logged in to view the page you requested' });
-    }
-  },
-
-  // Authorize admin privileges by ID
-  admin(req, res, next) {
-    const user = req.decoded;
-    User.find({
-      where: {
-        id: user.id,
-      },
-    })
-    .then((foundUser) => {
-      if (foundUser) {
-        if (foundUser.title === 'admin') {
-          next();
-        } else {
-          res.status(403).send({ message: 'Access denied! You do not have the required permissions.' });
-        }
-      } else {
-        res.send({ message: 'User not found!' });
-      }
-    });
-  },
-
-  // Logout the user by blacklisting the current token
-  // user has to login again to access protected parts of the application
-  logout(req, res) {
-    // Get the token from either the body, query or token
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    jwtBlacklist.blacklist(token);
-    res.send({ message: 'Logged out successfully!' });
-  },
-
   paginateUsers(req, res) {
-    if (req.query.limit || req.query.offset) {
       User.findAndCountAll({
         limit: req.query.limit,
         offset: req.query.offset,
@@ -383,37 +296,10 @@ module.exports = {
         order: [['id', 'ASC']],
       })
       .then((users) => {
-        res.send(users);
+        res.status(200).send(users);
       })
       .catch((err) => {
-        res.send(err);
+        res.status(400).send({message: 'Please use numerical values Only!'});
       });
-    }
-  },
-
-  // Search for a with their username or email
-  // return user
-  userSearch(req, res) {
-    if (req.query.q) {
-      User.findAndCountAll({
-        where: {
-          $or: [
-            { username: { $like: `%${req.query.q}%` } },
-            { email: { $like: `%${req.query.q}%` } },
-          ],
-        },
-        limit: req.query.limit,
-        offset: req.query.offset,
-        attributes: ['username', 'email'],
-        order: [['username', 'ASC']],
-      })
-      .then((user) => {
-        if (!user || user.rows.length === 0) {
-          res.send({ message: 'User not found!' });
-        } else {
-          res.status(200).send(user);
-        }
-      });
-    }
   },
 };
