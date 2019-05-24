@@ -29,3 +29,5 @@ exclude_paths:
 - package-lock.json
 - materialize/
 - .vscode
+- test/
+- server/migrations/
