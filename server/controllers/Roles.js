@@ -9,7 +9,8 @@ module.exports = {
   // else create a new role with 'title' and 'description' attributes
   // Return created role and message on success.
   create(req, res) {
-    if (isNullNumberOrWhitespace(req.body.title) || isNullNumberOrWhitespace(req.body.description)) {
+    if (isNullNumberOrWhitespace(req.body.title)
+    || isNullNumberOrWhitespace(req.body.description)) {
       res.status(400).send({ message: 'Fields can not be empty or begin with a number' });
     } else if (req.body.title) {
       Role.findOne({

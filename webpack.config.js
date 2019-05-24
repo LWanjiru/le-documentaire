@@ -46,10 +46,11 @@ const config = {
   module: {
     rules: [
       // Match both .js and .jsx when compiling
-      { test: /\.(js|jsx)$/,
+      {
+        test: /\.(js|jsx)$/,
         use: ['react-hot-loader', 'babel-loader'],
         include: path.join(__dirname, 'client'),
-        exclude: /node_modules|bower_components/
+        exclude: /node_modules|bower_components/,
       },
 
       // Extract CSS

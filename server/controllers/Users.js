@@ -26,12 +26,12 @@ module.exports = {
           if (user) {
             const hashPassword = user.password;
             const passwordValue = passwordHash.verify(req.body.password, hashPassword);
-            if (req.body.password !=='' && passwordValue) {
+            if (req.body.password !== '' && passwordValue) {
               const token = jwtBlacklist.sign({
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                title: user.title
+                title: user.title,
               }, config.secret, { expiresIn: '1h' });
               const loginDetails = {
                 id: user.id,
@@ -46,7 +46,7 @@ module.exports = {
                 message: 'Log in successful!',
                 token,
               });
-            } else if(req.body.password === '') {
+            } else if (req.body.password === '') {
               res.status(400).send({ message: 'password field cannot be empty.' });
             } else {
               res.status(400).send({ message: 'Wrong username/password.' });
@@ -56,7 +56,7 @@ module.exports = {
           } else {
             res.status(404).send({ message: 'This user does not exist.' });
           }
-        })
+        });
       }
     });
   },
