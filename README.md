@@ -56,4 +56,3 @@ NB: To use the login `token` provided. Add it as an `x-access-token` attributes 
 
 [![Build Status](https://travis-ci.org/LWanjiru/le-documentaire.svg?branch=master)](https://travis-ci.org/LWanjiru/le-documentaire)
 [![CodeFactor](https://www.codefactor.io/repository/github/lwanjiru/le-documentaire/badge/master)](https://www.codefactor.io/repository/github/lwanjiru/le-documentaire/overview/master)
-[![Issue Count](https://codeclimate.com/github/LWanjiru/le-documentaire/badges/issue_count.svg)](https://codeclimate.com/github/LWanjiru/le-documentaire)
