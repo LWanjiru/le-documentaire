@@ -3,11 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: {
-        args: true,
-        message: 'this role already exists!',
-        required: true,
-      },
+      unique: true,
       primaryKey: true,
     },
     description: DataTypes.STRING,
@@ -15,10 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     classMethods: {
       associate(models) {
-        // associations defined here
         Role.hasMany(models.User, {
           foreignKey: 'title',
-          as: 'userRole',
+          as: 'user',
         });
       },
     },

@@ -1,18 +1,22 @@
 language: node_js
 node_js:
-  - '6'
+  - "6"
+  - "8"
+  - "7"
 script:
   - npm test
 code_climate:
   repo_token: e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
-before_script:
-  - cp config/database.yml.travis config/database.yml
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS test;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE test;' -U postgres; fi"
-  - npm install sequelize@$(echo $SEQUELIZE)
 services:
   - postgresql
-env:
-  - DB=postgres SEQUELIZE=4.3.1
+env: DIALECT=postgres SEQUELIZE=latest
+  global:
+    - PGPORT=5432
+before_script:
+  - cp ./database.yml.travis ./server/config/config.json
+  - npm install sequelize
+script:
+  - npm test
+after_success: npm run coverage
 addons:
   postgresql: "9.6"

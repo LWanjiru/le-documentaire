@@ -13,10 +13,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Require routes into the application
-require('./server/routes/route')(app);
+require('./routes/Routes')(app);
 
 // A catch-all route for anything the webservice does not define.
 app.get('*', (req, res) => res.status(404).send({
+  message: 'Oops! Nothing to see here.',
+}));
+app.post('*', (req, res) => res.status(404).send({
   message: 'Oops! Nothing to see here.',
 }));
 

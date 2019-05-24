@@ -9,16 +9,22 @@ module.exports = (sequelize, DataTypes) => {
       required: true,
     },
     access: {
+      type: DataTypes.ENUM,
+      values: ['public', 'private', 'role'],
+    },
+    owner: {
       type: DataTypes.STRING,
-      required: true,
-      default: 'public',
-      enum: ['private', 'public', 'role'],
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+    },
+    userRole: {
+      type: DataTypes.STRING,
     },
   }, {
     freezeTableName: true,
     classMethods: {
       associate(models) {
-        // associations defined here
         Document.belongsTo(models.User, {
           foreignKey: 'userId',
           onDelete: 'CASCADE',

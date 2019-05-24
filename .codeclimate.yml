@@ -22,7 +22,10 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-- test/**/*
+- node_modules/
 - dist/
 - coverage/
 - favicon
+- package-lock.json
+- materialize/
+- .vscode
