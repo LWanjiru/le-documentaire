@@ -3,11 +3,6 @@
 - Manage all your documents in one place, for the workspace.
 ---
 
-### Pivotal Tracker Stories
-
-- https://www.pivotaltracker.com/n/projects/2072191
----
-
 ### Setup Project
 
 - Clone this repository to your desktop using the command `$ git clone https://github.com/LWanjiru/le-documentaire.git`
