@@ -10,7 +10,7 @@
   "test": {
     "username": "linnettewanjiru",
     "password": null,
-    "database": "documentor_test",
+    "database": "documentor-test",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres",
