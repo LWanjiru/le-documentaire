@@ -23,8 +23,7 @@ if (config.environment === 'production') {
         native: true,
       },
       logging: true,
-    }
-  );
+    });
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
