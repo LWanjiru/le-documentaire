@@ -24,7 +24,8 @@ describe('Document', () => {
           .send({
             title: 'The fiery',
             content: 'I wrote something here too',
-          }).end(() => {
+          })
+          .end(() => {
             done();
           });
       });
@@ -293,7 +294,8 @@ describe('Documents (admin', () => {
             title: 'The mumbo jambo',
             content: 'I wrote something here too',
             access: 'public',
-          }).end(() => {
+          })
+          .end(() => {
             done();
           });
       });
