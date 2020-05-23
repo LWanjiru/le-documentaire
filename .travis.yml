@@ -5,8 +5,8 @@ node_js:
 cache:
   directories:
   - node_modules
-  
-install: 
+
+install:
   - npm install
 
 services:
@@ -27,10 +27,10 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
-script: 
+script:
   - npm test
 
-after_script: 
+after_script:
   - npm run coverage
 
   
