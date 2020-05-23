@@ -1,8 +1,8 @@
 test:
   adapter: postgresql
   encoding: unicode
-  database: documentor-test
+  database: documentor_test
   pool: 5
   username: linnettewanjiru
-  password: null
+  password: magnetic5
   
