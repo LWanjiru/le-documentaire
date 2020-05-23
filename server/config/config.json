@@ -2,7 +2,7 @@
   "development": {
     "username": "linnettewanjiru",
     "password": null,
-    "database": "documentor-dev",
+    "database": "documentor_dev",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"
@@ -10,7 +10,7 @@
   "test": {
     "username": "linnettewanjiru",
     "password": null,
-    "database": "documentor-test",
+    "database": "documentor_test",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres",
@@ -19,7 +19,7 @@
   "production": {
     "username": "linnettewanjiru",
     "password": null,
-    "database": "documentor-production",
+    "database": "documentor_production",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"

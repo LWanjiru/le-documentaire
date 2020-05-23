@@ -23,7 +23,8 @@ if (config.environment === 'production') {
         native: true,
       },
       logging: true,
-    },
+    // eslint-disable-next-line comma-dangle
+    }
   );
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);

@@ -1,7 +1,7 @@
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
 const jwtBlacklist = require('jwt-blacklist')(jwt);
-const config = require('../config/config');
+// const config = require('../config/config');
 const { Role, User } = require('../models');
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
                 username: user.username,
                 email: user.email,
                 title: user.title,
-              }, config.secret, { expiresIn: '1h' });
+              }, 'pebbles', { expiresIn: '1h' });
               const loginDetails = {
                 id: user.id,
                 username: user.username,
@@ -221,7 +221,7 @@ module.exports = {
     // Get the token from either the body, query or token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
-      jwt.verify(token, config.secret, (err, decoded) => {
+      jwt.verify(token, 'pebbles', (err, decoded) => {
         if (err) {
           res.status(401).send({ message: 'Failed to authenticate token. Please login in to verify account' });
         } else {
