@@ -17,7 +17,6 @@ describe('Document', () => {
       })
       .then((res) => {
         token = res.body.token;
-        console.log(token)
         Request(app)
           .post('/documents')
           .set('Accept', 'application/x-www-form-urlencoded')
@@ -287,7 +286,6 @@ describe('Documents (admin', () => {
       })
       .then((res) => {
         token = res.body.token;
-        console.log(token)
         Request(app)
           .post('/documents')
           .set('Accept', 'application/x-www-form-urlencoded')
