@@ -23,6 +23,7 @@ if (config.environment === 'production') {
         native: true,
       },
       logging: true,
+    // eslint-disable-next-line no-console
     }
   );
 } else {
