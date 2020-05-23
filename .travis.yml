@@ -32,5 +32,3 @@ script:
 
 after_script:
   - npm run coverage
-
-  
