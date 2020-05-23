@@ -13,8 +13,8 @@ services:
   - postgresql
 
 env:
-  - NODE_ENV=test
   global:
+    - NODE_ENV=test
     - PGPORT=5432
     - CC_TEST_REPORTER_ID=e8a35ce07efee405b89c962e132e8b5cffc2938785406ed448ad0abefd492405
 
@@ -31,4 +31,4 @@ script:
   - npm test
 
 after_script:
-  - npm run coverage
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
