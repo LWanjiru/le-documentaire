@@ -14,7 +14,7 @@
 
 - Change directories into the repository directory using command `$ cd le-documentaire`
 
-- For the current branch `$ git checkout feature/148963113/build-backend-with-tdd` and then install the dependencies using `$ npm install`
+- For the current branch `$ git checkout server-branch` and then install the dependencies using `$ npm install`
 
 - Ensure that you have [Postgresql](https://www.postgresql.org) installed and set up, and a client like [Postico](https://eggerapps.at/postico/) running to connect to your database.
 
