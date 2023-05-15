@@ -34,7 +34,7 @@
 }
 ```
 - You are now connected to the server. Checkout the `server/routes/Routes.js` file for the currently available routes and the required permissions. 
--  You can also check out the Documentation here [app.apiary.io/ledocumentaire](le-documentaire/apiary.apib)
+-  You can also check out the Documentation here [app.apiary.io/ledocumentaire](apiary.apib)
 
 ```
 NB: To use the login `token` provided. Add it as an `x-access-token` attributes in your header after each login as a different user. 
