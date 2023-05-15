@@ -1,0 +1,485 @@
+FORMAT: 1A
+
+# Le Documentaire
+
+Le Documentaire is a RESTFUL API that allows its consumers to create, update, view and manage documents based in their roles in an organization.
+
+API V2 https://github.com/LWanjiru/le-documentaire/tree/server-branch
+
+`Note`: The front-end is currently under maintenance and will be made available as soon as it goes back on live.
+Meanwhile, all the endpoints can be tested via this documentation, or by `cloning the repo` in the shared link, running it locally and working with the endpoints on `Postman`.
+
+# Documentation guidelines
+
+Unauthenticated endpoints are:
+ `POST /users/login`,  - login a user
+ `POST /users/`, - signUp a user
+ `GET /` - view all public documents
+ `GET /search/documents/` - search through public documents
+
+
+# Role  [/roles]
+Resources related to roles in the API
+Role Endpoints are exclusive to the ADMIN, except for the `GET /roles` endpoint;
+Which is accessible to authenticated users.
+
+### Create a new role [POST /roles/add]
+Admin populates the following fields.
+The following credentials are required:
+    + Title
+    + Description
+    
++ Request (application/json)
+
+        {
+            "title": "testRole",
+            "Description": "They help us populate test data"
+        }
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "message": "Role created successfully!"
+            }
+
+### View all the existing roles [GET]
++ Response 200 (application/json)
+
+        [
+        {
+            "title": "admin",
+            "description": "They hold the power and can do everything",
+            "createdAt": "2017-08-20T11:13:23.000Z",
+            "updatedAt": "2017-08-20T11:13:23.000Z"
+        },
+        {
+            "title": "regular",
+            "description": "they really teach a lot",
+            "createdAt": "2017-08-20T11:13:23.000Z",
+            "updatedAt": "2017-08-20T12:35:13.277Z"
+        }
+        ]
+
+### Get a single role by its title [GET /roles/:title]
++ Response 200 (application/json)
+
+        {
+          "title": "regular",
+          "description": "This is the default user role. Can create, edit, view and delete own documents view others public and those authorized to this role",
+          "createdAt": "2017-08-20T11:13:23.000Z",
+          "updatedAt": "2017-08-20T11:13:23.000Z"
+        }
+
+### Update a role [PUT /roles/:title]
+
++ Response 200 (application/json)
+
+        {
+          "message": "Role updated!"
+        }
+
+### Delete a role by title [DELETE /roles/:title]
++ Response 200 (application/json)
+
+        {
+            "message": "Role deleted successfully!"
+        }
+
+### Delete all roles [DELETE /roles]
++ Response 204 (application/json)
+
+# User [/users/]
+    Resources related to users in the API.
+    A user submits details in validated fields.
+    The following credentials are required:
+    + Username
+    + First Name
+    + Last Name
+    + Email
+    + Password
+    
+### Create A New User [POST /users/]
++ Request (application/json)
+
+        {
+            "username": "bubbles7",
+            "firstName": "Test"
+            "lastName": "Name"
+            "email": "bubbly@example.com",
+            "password": "myPass1d",
+        }
+        
++ Response 201 (application/json)
+    + Body
+  
+            {
+            "message": "User created successfully!"
+            }
+
+### Login A User [POST /users/login]
+Serves existing users allowing them access into the deeper parts of the application.
+It takes the `username` and ` password ` as arguments.
++ Request (application/json)
+
+        {
+            "username": "bubbles7",
+            "password": "myPass1d",
+        }
+    
++ Response 200 (application/json)
+
+        {
+          "loginDetails": {
+              "id": 7,
+              "username": "bubbles7",
+              "email": "bubbly@example.com",
+              "title": "regular",
+              "createdAt": "2017-08-20T11:24:13.218Z",
+              "updatedAt": "2017-08-20T11:24:13.218Z"
+          },
+          "message": "Log in successful!",
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywidXNlcm5hbWUiOiJidWJibGVzNyIsImVtYWlsIjoiYnViYmx5QGV4YW1wbGUuY29tIiwidGl0bGUiOiJyZWd1bGFyIiwiZXhwIjoxNTAzMjMyMDkxLCJpYXQiOjE1MDMyMjg0OTF9.xp7ARSdf6xYQGIOsu_TEmaMVhgp1ZKvHaZjXhxAC1R0"
+        }
+
+### User Logout [POST /users/logout]
+Logs out a user by blacklisting the token.
++ Response 205 (application/json)
+        
+        {
+        
+        }
+
+### Returns all the existing users and count for pagination [GET /users]
+(Authenticated users)
++ Response 200 (application/json)
+    
+        {
+        "count": 3,
+        "rows": [
+            {
+                "id": 1,
+                "username": "admin",
+                "title": "admin",
+                "createdAt": "2017-08-20T11:13:23.000Z"
+            },
+            {
+                "id": 2,
+                "username": "musketeer",
+                "title": "regular",
+                "createdAt": "2017-08-20T11:13:23.000Z"
+            },
+            {
+                "id": 7,
+                "username": "bubbles7",
+                "title": "regular",
+                "createdAt": "2017-08-20T11:24:13.218Z"
+            }
+          ]
+        }
+
+### Get a user by id [GET /users/:id]
++ Response 200 (application/json)
+    
+        {
+          "id": 7,
+          "username": "bubbles7",
+          "email": "bubbly@example.com",
+          "title": "regular",
+          "createdAt": "2017-08-20T11:24:13.218Z",
+          "updatedAt": "2017-08-20T11:24:13.218Z"
+        }
+
+### Search for a user by username [GET /search/users?q=bubbles]
++ Response 200 (application/json)
+    
+        {
+          "count": 1,
+          "rows": [
+              {
+                  "username": "bubbles7",
+                  "email": "bubbly@example.com"
+              }
+            ]
+        }
+
+### Update user's details after fetch by Id [PUT /users/:id]
++ Response 200 (application/json)
+    
+        {
+          "message": "Your profile has been updated!"
+        }
+
+### Delete a user by their Id [DELETE /users/:id]
+(admin)
++ Response 200 (application/json)
+
+        {
+            "message": "User deleted!"
+        }
+
+### Delete all users [DELETE /users]
+(admin)
++ Response 204 (application/json)
+        
+
+# Documents [/documents]
+Resources related to documents in the API
+
+### Create a new document [POST /documents]
+NB: Titles must be unique and the user can either set the access to a desired one between public and role.
+By default, a document is assigned 'private' access.
++ Response 200 (application/json)
+    
+        {
+          "id": 1,
+          "title": "GAVEL HAS MADE THIS 1 2 2",
+          "content": "Yeiy! just made a document.  I am gavel",
+          "access": "private",
+          "owner": "bubbles7",
+          "userId": 7,
+          "userRole": "regular",
+          "updatedAt": "2017-08-20T12:18:58.371Z",
+          "createdAt": "2017-08-20T12:18:58.371Z"
+        }
+
+### Gives access to view all documents regardless of access [GET /documents/all]
+(admin)
++ Response 200 (application/json)
+    
+           [
+            {
+                "id": 2,
+                "title": "bubbles 1",
+                "content": "Yeiy! just made a document. ",
+                "access": "role",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:54:27.142Z",
+                "updatedAt": "2017-08-20T12:54:27.142Z"
+            },
+            {
+                "id": 3,
+                "title": "bubbles 2",
+                "content": "Yeiy! just made another document. ",
+                "access": "public",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:54:49.566Z",
+                "updatedAt": "2017-08-20T12:54:49.566Z"
+            },
+            {
+                "id": 4,
+                "title": "bubbles 3",
+                "content": "Yeiy! just made another document.  this time public",
+                "access": "public",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:56:15.901Z",
+                "updatedAt": "2017-08-20T12:56:15.901Z"
+            },
+            {
+                "id": 5,
+                "title": "bubbles 5",
+                "content": "Yeiy! just made another document.  again",
+                "access": "private",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:57:38.646Z",
+                "updatedAt": "2017-08-20T12:57:38.646Z"
+            },
+            {
+                "id": 6,
+                "title": "Merry christmas again I am admin",
+                "content": "This is private",
+                "access": "private",
+                "owner": "admin",
+                "userId": 1,
+                "userRole": "admin",
+                "createdAt": "2017-08-20T12:58:44.009Z",
+                "updatedAt": "2017-08-20T12:58:44.009Z"
+            },
+            {
+                "id": 7,
+                "title": "Merry christmas again I am admin",
+                "content": "This is is by role ",
+                "access": "role",
+                "owner": "admin",
+                "userId": 1,
+                "userRole": "admin",
+                "createdAt": "2017-08-20T12:59:18.036Z",
+                "updatedAt": "2017-08-20T12:59:18.036Z"
+            },
+            {
+                "id": 8,
+                "title": "Merry christmas again I am admin 2",
+                "content": "This is private",
+                "access": "role",
+                "owner": "admin",
+                "userId": 1,
+                "userRole": "admin",
+                "createdAt": "2017-08-20T12:59:41.262Z",
+                "updatedAt": "2017-08-20T12:59:41.262Z"
+            }
+        ]
+
+### Give a user read-only permission for all the public documents. [GET /]
+Contains pagination.
++ Response 200 (application/json)
+
+        {
+        "count": 2,
+        "rows": [
+            {
+                "id": 3,
+                "title": "bubbles 2",
+                "content": "Yeiy! just made another document. ",
+                "access": "public",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:54:49.566Z",
+                "updatedAt": "2017-08-20T12:54:49.566Z"
+            },
+            {
+                "id": 4,
+                "title": "bubbles 3",
+                "content": "Yeiy! just made another document.  this time public",
+                "access": "public",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:56:15.901Z",
+                "updatedAt": "2017-08-20T12:56:15.901Z"
+            }
+        ]
+        }
+        
+### View all documents from associated with the logged in user [GET /users/:id/documents]
+Paginated
++ Response 200 (application/json)
+    
+        {
+          "count": 3,
+          "rows": [
+              {
+                  "id": 6,
+                  "title": "Merry christmas again I am admin",
+                  "content": "This is private",
+                  "access": "private",
+                  "owner": "admin",
+                  "userId": 1,
+                  "userRole": "admin",
+                  "createdAt": "2017-08-20T12:58:44.009Z",
+                  "updatedAt": "2017-08-20T12:58:44.009Z"
+              },
+              {
+                  "id": 7,
+                  "title": "Merry christmas again I am admin",
+                  "content": "This is is by role ",
+                  "access": "role",
+                  "owner": "admin",
+                  "userId": 1,
+                  "userRole": "admin",
+                  "createdAt": "2017-08-20T12:59:18.036Z",
+                  "updatedAt": "2017-08-20T12:59:18.036Z"
+              },
+              {
+                  "id": 8,
+                  "title": "Merry christmas again I am admin 2",
+                  "content": "This is private",
+                  "access": "role",
+                  "owner": "admin",
+                  "userId": 1,
+                  "userRole": "admin",
+                  "createdAt": "2017-08-20T12:59:41.262Z",
+                  "updatedAt": "2017-08-20T12:59:41.262Z"
+              }
+          ]
+        }
+
+### View a document by specifying its Id [GET /documents/:id]
++ Response 200 (application/json)
+    
+        {
+          "id": 5,
+          "title": "bubbles 5",
+          "content": "Yeiy! just made another document.  again",
+          "access": "private",
+          "owner": "bubbles7",
+          "userId": 8,
+          "userRole": "regular",
+          "createdAt": "2017-08-20T12:57:38.646Z",
+          "updatedAt": "2017-08-20T12:57:38.646Z"
+        }
+
+### Update a document by specifying its Id [PUT /documents/:id]
++ Response 200 (application/json)
+    
+        {
+         "message": "Your document was successfully updated!"
+        }
+
+### Allow read-only access to people in the same role as the owner[GET /documents/users/:role]
+Paginated
++ Response 200 (application/json)
+    
+        {
+        "count": 2,
+        "rows": [
+            {
+                "id": 2,
+                "title": "bubbles 1",
+                "content": "Yeiy! just made a document. ",
+                "access": "role",
+                "owner": "bubbles7",
+                "userId": 8,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T12:54:27.142Z",
+                "updatedAt": "2017-08-20T12:54:27.142Z"
+            },
+            {
+                "id": 9,
+                "title": "pawpaw chronicles",
+                "content": "then I wrote 1",
+                "access": "role",
+                "owner": "pawpaw",
+                "userId": 9,
+                "userRole": "regular",
+                "createdAt": "2017-08-20T13:21:10.982Z",
+                "updatedAt": "2017-08-20T13:21:10.982Z"
+            }
+        ]
+        }
+
+### Delete a document by specifying its Id [DELETE /documents/:id]
++ Response 200 (application/json)
+    
+        {
+          "message": "Document deleted!"
+        }
+
+
+### Search public documents by title [GET /search/documents?q=pawpaw]
+Paginated
++ Response 200 (application/json)
+
+        {
+        "count": 1,
+        "rows": [
+            {
+                "id": 10,
+                "title": "pawpaw chronicles",
+                "content": "then I wrote another one",
+                "access": "public",
+                "owner": "pawpaw",
+                "userRole": "regular",
+                "createdAt": "2017-08-20T13:21:31.473Z",
+                "updatedAt": "2017-08-20T13:21:31.473Z"
+            }
+        ]
+        }
